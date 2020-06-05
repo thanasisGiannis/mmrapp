@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>mmrapp</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I&callback=initMap&libraries=places&callback=googleMapCallback"></script>
+	<script src="./googlemap.js"></script>
+
+	<style>
+      /* Set the size of the div element that contains the map */
+      #map {
+        height: 600px;  /* The height is 400 pixels */
+        width : 750px;  /* The width is the width of the web page */
+       }
+   </style>
+
+	
+
+</head>
+<body>
+
+<div class="jumbotron text-center">
+  <h1>Multimodal Route Planner</h1>
+  <p>Plan your trip in Western Greece and Puglia!</p> 
+</div>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+				<! buttons>
+				<div class="btn-group btn-group-lg">
+					<button id='trainButton' type="button" class="btn btn-primary active">Train</button>
+					<button id='walkButton' type="button" class="btn btn-primary active">Walk</button>
+					<button id='carButton' type="button" class="btn btn-primary active">Car</button>
+					<button id='hybridButton' type="button" class="btn btn-primary active" data-toggle="modal" data-target="#buttonCheckModal">Hybrid</button>
+				</div>
+
+				<!-- Modal -->
+				  <div class="modal fade"  id="buttonCheckModal" role="dialog">
+					 <div class="modal-dialog">
+					 
+						<!-- Modal content-->
+						<div class="modal-content">
+						  <div class="modal-header">
+							 <h4 class="modal-title">Choose mod</h4>
+						  </div>
+						  <div class="modal-body">
+								<form id="buttonCheckBox">
+									<input type='radio' class='radio-button' id="tmpmod1" name="tmpmod" value="pc">
+										<label for="tmpmod1"> PC </label><br>
+									<input type='radio' class='radio-button' id="tmpmod2" name="tmpmod" value="cpc">
+										<label for="tmpmod2"> CPC </label><br>
+									<input type='radio' class='radio-button' id="tmpmod3" name="tmpmod" value="cp">
+										<label for="tmpmod3"> CP </label><br>
+								  <input type="button" value="Submit" id='hybridChoices' class="btn btn-default">
+								</form>
+	
+						  </div>
+						</div>
+					 </div>
+				</div>
+
+				<script>
+					document.getElementById("trainButton").onclick = function(){
+											updateMod('pub');
+											return false;
+											};
+
+					document.getElementById("walkButton").onclick = function(){
+											updateMod('walk');
+											return false;
+											};
+
+					document.getElementById("carButton").onclick = function(){
+											updateMod('car');
+											return false;
+											};
+
+					document.getElementById("hybridChoices").onclick = function(){
+
+								if(tmpmod1.checked)
+									updateMod('pc'); 
+
+								if(tmpmod2.checked)
+									updateMod('cpc');
+
+								if(tmpmod3.checked)
+									updateMod('cp');
+
+								$('#buttonCheckModal').modal('hide');
+								return false;
+								};
+				</script>
+
+			
+
+
+				<! form>
+				<form id="searchForm">
+					<div class="form-group">
+						<input id="spoint" type="text" class="form-control" placeholder="Starting point" >
+					</div>
+					<div class="form-group">
+						<input  id="epoint" type="text" class="form-control" placeholder="Destination">
+					</div>
+					<button type="submit" class="btn btn-default">Search</button>
+				</form> 
+
+				<! on submit call js function>
+				<script> 
+					document.getElementById("searchForm").onsubmit = function(){
+						updateRoute(spoint,epoint);
+						return false;
+						};
+				</script>
+    </div>
+
+
+	
+	<div class="col-sm-8" id="map">
+	</div>
+
+
+  </div>
+</div>
+
+</body>
+</html>
+
