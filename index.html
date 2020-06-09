@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>mmrapp</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<title>mmrapp</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I&callback=initMap&libraries=places&callback=googleMapCallback"></script>
 	<script src="./googlemap.js"></script>
-
 	<style>
-      /* Set the size of the div element that contains the map */
-      #map {
-        height: 600px;  /* The height is 400 pixels */
-        width : 750px;  /* The width is the width of the web page */
-       }
-   </style>
+		/* Set the size of the div element that contains the map */
+		#map {
+		  height: 600px;  /* The height is 400 pixels */
+		  width : 750px;  /* The width is the width of the web page */
+		 }
+	</style>
 
 	
 
@@ -29,6 +28,7 @@
 </div>
 
 
+
 <div class="container">
   <div class="row">
     <div class="col-sm-4">
@@ -38,6 +38,21 @@
 					<button id='walkButton' type="button" class="btn btn-primary active">Walk</button>
 					<button id='carButton' type="button" class="btn btn-primary active">Car</button>
 					<button id='hybridButton' type="button" class="btn btn-primary active" data-toggle="modal" data-target="#buttonCheckModal">Hybrid</button>
+				</div>
+
+
+				<div class="container">
+				  <form onchange="changeRoute()">
+					 <label class="radio-inline" for="routeNum1"></label>
+						<input type="radio" id="routeNum1" name="routeNum" checked disabled >Route 1
+					 
+					 <label class="radio-inline" for="routeNum2"></label>
+						<input type="radio" id="routeNum2" name="routeNum" disabled>Route 2
+					 
+					 <label class="radio-inline" for="routeNum3"> </label>
+						<input type="radio" id="routeNum3" name="routeNum" disabled>Route 3
+					
+				  </form>
 				</div>
 
 				<!-- Modal -->
@@ -120,8 +135,6 @@
 				</script>
     </div>
 
-
-	
 	<div class="col-sm-8" id="map">
 	</div>
 

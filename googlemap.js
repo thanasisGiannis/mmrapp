@@ -24,6 +24,32 @@ var mainRoute=0;
 
 
 
+
+function changeRoute(){
+
+	if (routeNum1.checked){
+		mainRoute=0;
+		queryRoute();
+		return;
+	}
+
+	if (routeNum2.checked){
+		mainRoute=1;
+		queryRoute();
+		return;
+	}
+
+	if (routeNum3.checked){
+		mainRoute=2;
+		queryRoute();
+		return;
+	}
+
+
+}
+
+
+
 function updateMod(modButton){
 	
 	mod = modButton;
@@ -53,15 +79,6 @@ function initMap() {
         });
 
 	map = localmap;
-/*
-  // The location of Uluru
-  var uluru = {lat: 38.246639, lng: 21.734573};
-  // The map, centered at Uluru
-  map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 12, center: uluru});
-  // The marker, positioned at Uluru
-  var marker = new google.maps.Marker({position: uluru, map: map});
-*/
 }
 
 // Autocomplete forms
@@ -162,8 +179,29 @@ function updateRoute(spoint,epoint){
 	
 }
 
+function toDate(unix_timestamp){
 
-function drawLineMap(coordinates,colorMod){
+	if(unix_timestamp==0){
+		return '-';
+	}
+
+	// Create a new JavaScript Date object based on the timestamp
+	// multiplied by 1000 so that the argument is in milliseconds, not seconds.
+	var date = new Date(unix_timestamp * 1000);
+	// Hours part from the timestamp
+	var hours = date.getHours();
+	// Minutes part from the timestamp
+	var minutes = "0" + date.getMinutes();
+	// Seconds part from the timestamp
+	var seconds = "0" + date.getSeconds();
+
+	// Will display time in 10:30:23 format
+	var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+	return formattedTime;
+}
+
+function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTime,waitTime,streetEnd,arrivalTimeEnd){
 
 
 	var color;
@@ -205,22 +243,40 @@ function drawLineMap(coordinates,colorMod){
           strokeWeight: 5
         });
 
-	var markerS = new google.maps.Marker({
-		 position: route[0],
-		 map: map,
-		 title: 'Start of ' + colorMod
-	  });
 
-	var markerE = new google.maps.Marker({
-		 position: route[route.length-1],
-		 map: map,
-		 title: 'End of ' + colorMod
-	  });
-	markerS.setMap(map);
-	markerE.setMap(map);
-	globalMarkerMap.push(markerS);
-	globalMarkerMap.push(markerE);
+ 	
+	if(putMarkers){
+/*
+		if(arrivalTime == 0){
+			arrivalTime = "-";
+			waitTime = "-";
+		}
+*/
+		var messageS = 'Street: ' + street + 
+							'\nArrival Time: '+ toDate(arrivalTime)+
+							'\nLeave Time: '+ toDate(leaveTime)+
+							'\nWait Time: '+ waitTime +
+							'\nTransport: '+ colorMod;
 
+		var markerS = new google.maps.Marker({
+			 position: route[0],
+			 map: map,
+			title: messageS
+		  });
+
+		var messageE = 'Street: ' + streetEnd + 
+							'\nArrival Time: '+ toDate(arrivalTimeEnd);
+
+		var markerE = new google.maps.Marker({
+			 position: route[route.length-1],
+			 map: map,
+			 title: messageE
+		  });
+		markerS.setMap(map);
+		markerE.setMap(map);
+		globalMarkerMap.push(markerS);
+		globalMarkerMap.push(markerE);
+	}
 
 	polyMap.setMap(map);
 
@@ -228,6 +284,7 @@ function drawLineMap(coordinates,colorMod){
 
 	lineExists=1;
 	//return false;
+
 }
 
 function queryRoute(){
@@ -280,6 +337,11 @@ function queryRoute(){
 
 	// Draw polylines on google map 
 	var numRoutes = jsonRoutes.routes.length; 
+
+	if(mainRoute>=numRoutes){
+		mainRoute = numRoutes-1;
+	}
+
 	for(var j=0; j<numRoutes; j++){
 		if(j==mainRoute){
 			continue;
@@ -287,9 +349,9 @@ function queryRoute(){
 		numIter = jsonRoutes.routes[j].legs.length;
 		for(var i=0; i<numIter; i++){
 			var route = jsonRoutes.routes[j].legs[i].coordinates;
-			var type = jsonRoutes.routes[j].legs[i].type;
+			var type  = jsonRoutes.routes[j].legs[i].type;
 			
-			drawLineMap(route,'');
+			drawLineMap(route,'',false,"","","","","","");
 		}
 	}
 
@@ -300,8 +362,50 @@ function queryRoute(){
 		var route = jsonRoutes.routes[j].legs[i].coordinates;
 		var type  = jsonRoutes.routes[j].legs[i].type;
 		
-		drawLineMap(route,type);
+		arrivalTime = jsonRoutes.routes[j].legs[i].extra_data[0][1];
+		
+		var waitTime    = jsonRoutes.routes[j].legs[i].extra_data[0][2];//leaveTime-arrivalTime;
+		var leaveTime   = arrivalTime + waitTime;//jsonRoutes.routes[j].legs[i].extra_data[0][1];
+		var street = jsonRoutes.routes[j].legs[i].extra_data[0][0];
+		if(i==0){
+			arrivalTime=0;
+		}
+
+		var streetE = jsonRoutes
+							.routes[j]
+							.legs[i]
+							.extra_data[jsonRoutes.routes[j].legs[i].extra_data.length-1][0];
+
+		var arrivalTimeE = jsonRoutes
+							.routes[j]
+							.legs[i]
+							.extra_data[jsonRoutes.routes[j].legs[i].extra_data.length-1][1];
+
+		/* + street,arrivalTime,leaveTime,waitTime */
+		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE);
 	}
+
+
+	/* reset html form */
+	switch(numRoutes) {
+		  case 2:
+			document.getElementById("routeNum1").disabled=false;
+			document.getElementById("routeNum2").disabled=false;
+			document.getElementById("routeNum3").disabled=true;
+			
+			break;
+		  case 3:
+			document.getElementById("routeNum1").disabled=false;
+			document.getElementById("routeNum2").disabled=false;
+			document.getElementById("routeNum3").disabled=false;
+			break;
+		  default:
+			document.getElementById("routeNum1").disabled=false;
+			document.getElementById("routeNum2").disabled=true;
+			document.getElementById("routeNum3").disabled=true;
+		} 
+		var routeNumUp=mainRoute+1;
+		document.getElementById("routeNum"+routeNumUp).checked=true;
 
 }
 
