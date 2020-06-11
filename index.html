@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>mmrapp</title>
+	<title>Multimodal Route Planner</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -12,8 +12,8 @@
 	<style>
 		/* Set the size of the div element that contains the map */
 		#map {
-		  height: 600px;  /* The height is 400 pixels */
-		  width : 750px;  /* The width is the width of the web page */
+		  height: 72vh; /*600px;*/  /* The height is 400 pixels */
+		  width : 74vw; /*750px;*/  /* The width is the width of the web page */
 		 }
 	</style>
 
@@ -29,29 +29,28 @@
 
 
 
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
 				<! buttons>
 				<div class="btn-group btn-group-lg">
-					<button id='trainButton' type="button" class="btn btn-primary active">Train</button>
+					<button id='trainButton' type="button" class="btn btn-primary active">Public</button>
 					<button id='walkButton' type="button" class="btn btn-primary active">Walk</button>
 					<button id='carButton' type="button" class="btn btn-primary active">Car</button>
 					<button id='hybridButton' type="button" class="btn btn-primary active" data-toggle="modal" data-target="#buttonCheckModal">Hybrid</button>
 				</div>
 
-
+				<! route selector>
 				<div class="container">
 				  <form onchange="changeRoute()">
 					 <label class="radio-inline" for="routeNum1"></label>
-						<input type="radio" id="routeNum1" name="routeNum" checked disabled >Route 1
+						<input type="radio" id="routeNum1" name="routeNum" disabled >Route 1
 					 
 					 <label class="radio-inline" for="routeNum2"></label>
 						<input type="radio" id="routeNum2" name="routeNum" disabled>Route 2
 					 
 					 <label class="radio-inline" for="routeNum3"> </label>
 						<input type="radio" id="routeNum3" name="routeNum" disabled>Route 3
-					
 				  </form>
 				</div>
 
@@ -123,7 +122,7 @@
 					<div class="form-group">
 						<input  id="epoint" type="text" class="form-control" placeholder="Destination">
 					</div>
-					<button type="submit" class="btn btn-default">Search</button>
+					<button type="submit" class="btn pull-right btn-default " float="right">Search</button>
 				</form> 
 
 				<! on submit call js function>
@@ -135,8 +134,9 @@
 				</script>
     </div>
 
-	<div class="col-sm-8" id="map">
+	<div class="col-sm-9" id="map" style=.map>
 	</div>
+
 
 
   </div>
