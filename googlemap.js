@@ -58,11 +58,6 @@ function setDefault(){
 	mod  = 'pub'; // koumpia
 	obj  = 'multi';
 	skip;// = ['tram']; // checkbox
-	globalPolyMap=[];
-	globalMarkerMap=[];
-
-	lineExists = 0;
-	mainRoute=0;
 
 	return false;
 }
