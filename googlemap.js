@@ -25,26 +25,12 @@ var mainRoute=0;
 
 
 
-function changeRoute(){
+function changeRoute(routeNum){
+//	alert(routeNum.value);
 
-	if (routeNum1.checked){
-		mainRoute=0;
-		queryRoute();
-		return;
-	}
-
-	if (routeNum2.checked){
-		mainRoute=1;
-		queryRoute();
-		return;
-	}
-
-	if (routeNum3.checked){
-		mainRoute=2;
-		queryRoute();
-		return;
-	}
-
+	mainRoute=routeNum.value;
+	queryRoute();
+	return false;
 
 }
 
@@ -53,10 +39,33 @@ function changeRoute(){
 function updateMod(modButton){
 	
 	mod = modButton;
-	queryRoute();	
+	queryRoute();
+	return false;	
 }
 
 
+function setDefault(){
+
+	lg   = 'en';
+	slat = 38.2466036;
+	slon = 21.7361790;
+
+	dlat = 38.2466404;
+	dlon = 21.7361404;
+
+	ts   = 1573735815;
+	te   = ts + 10000000;//1573737192;
+	mod  = 'pub'; // koumpia
+	obj  = 'multi';
+	skip;// = ['tram']; // checkbox
+	globalPolyMap=[];
+	globalMarkerMap=[];
+
+	lineExists = 0;
+	mainRoute=0;
+
+	return false;
+}
 
 
 
@@ -65,7 +74,7 @@ function googleMapCallback(){
 	initMap();
 	initAutocomplete('spoint');
 	initAutocomplete('epoint');
-
+	return false;
 }
 
 
@@ -79,6 +88,7 @@ function initMap() {
         });
 
 	map = localmap;
+	return false;
 }
 
 // Autocomplete forms
@@ -105,6 +115,7 @@ function initAutocomplete(id) {
   // When the user selects an address from the drop-down, populate the
   // address fields in the form.
   autocomplete.addListener('place_changed', fillInAddress);
+  return false;
 }
 
 
@@ -126,6 +137,8 @@ function fillInAddress() {
       document.getElementById(addressType).value = val;
     }
   }
+
+	return false;
 }
 function geolocate() {
   if (navigator.geolocation) {
@@ -139,6 +152,8 @@ function geolocate() {
       autocomplete.setBounds(circle.getBounds());
     });
   }
+
+	return false;
 }
 
 
@@ -176,7 +191,7 @@ function updateRoute(spoint,epoint){
 	dlon = jsonEpoint.results[0].geometry.location.lng;
 	
 	queryRoute();
-	
+	return false;
 }
 
 function toDate(unix_timestamp){
@@ -283,9 +298,36 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 	globalPolyMap.push(polyMap);
 
 	lineExists=1;
-	//return false;
+	return false;
 
 }
+
+function removeDirections(){
+
+
+	document.getElementById("directions").innerHTML='';
+	return false;
+}
+
+
+
+function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE){
+
+
+	outputMessage = "Street: "+street+"\n"+
+						 "Arrival Time: "+arrivalTime+"\n"+
+						 "Leave Time: "+leaveTime + "\n"+
+						 "Wait Time: "+waitTime + "\n"+
+						 "Using: " +type+"\n";
+
+	var node = document.createElement("P");                 // Create a <li> node
+	var textnode = document.createTextNode(outputMessage);         // Create a text node
+	node.appendChild(textnode);                              // Append the text to <li>
+	document.getElementById("directions").appendChild(node);     // Append <li> to <ul> with id="myList" 
+
+	return false;
+}
+
 
 function queryRoute(){
 
@@ -358,6 +400,8 @@ function queryRoute(){
 	/* Draw lines with colors */
 	var j=mainRoute;
 	numIter = jsonRoutes.routes[j].legs.length;
+	
+	removeDirections();
 	for(var i=0; i<numIter; i++){
 		var route = jsonRoutes.routes[j].legs[i].coordinates;
 		var type  = jsonRoutes.routes[j].legs[i].type;
@@ -383,6 +427,10 @@ function queryRoute(){
 
 		/* + street,arrivalTime,leaveTime,waitTime */
 		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE);
+
+		
+		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE);
+
 	}
 
 
@@ -407,5 +455,6 @@ function queryRoute(){
 		var routeNumUp=mainRoute+1;
 		document.getElementById("routeNum"+routeNumUp).checked=true;
 
+	return false;	
 }
 

@@ -15,9 +15,15 @@
 		  height: 72vh; /*600px;*/  /* The height is 400 pixels */
 		  width : 74vw; /*750px;*/  /* The width is the width of the web page */
 		 }
-	</style>
 
-	
+		div.directions {
+		  background-color: white;
+		  width: inherit;
+		  max-height: 55vh;
+		  overflow-y:auto;
+		}
+
+	</style>
 
 </head>
 <body>
@@ -34,24 +40,10 @@
     <div class="col-sm-3">
 				<! buttons>
 				<div class="btn-group btn-group-lg">
-					<button id='trainButton' type="button" class="btn btn-primary active">Public</button>
-					<button id='walkButton' type="button" class="btn btn-primary active">Walk</button>
-					<button id='carButton' type="button" class="btn btn-primary active">Car</button>
-					<button id='hybridButton' type="button" class="btn btn-primary active" data-toggle="modal" data-target="#buttonCheckModal">Hybrid</button>
-				</div>
-
-				<! route selector>
-				<div class="container">
-				  <form onchange="changeRoute()">
-					 <label class="radio-inline" for="routeNum1"></label>
-						<input type="radio" id="routeNum1" name="routeNum" disabled >Route 1
-					 
-					 <label class="radio-inline" for="routeNum2"></label>
-						<input type="radio" id="routeNum2" name="routeNum" disabled>Route 2
-					 
-					 <label class="radio-inline" for="routeNum3"> </label>
-						<input type="radio" id="routeNum3" name="routeNum" disabled>Route 3
-				  </form>
+					<button id='trainButton' type="button" class="btn btn-primary ">Public</button>
+					<button id='walkButton' type="button" class="btn btn-primary ">Walk</button>
+					<button id='carButton' type="button" class="btn btn-primary ">Car</button>
+					<button id='hybridButton' type="button" class="btn btn-primary " data-toggle="modal" data-target="#buttonCheckModal">Hybrid</button>
 				</div>
 
 				<!-- Modal -->
@@ -122,22 +114,36 @@
 					<div class="form-group">
 						<input  id="epoint" type="text" class="form-control" placeholder="Destination">
 					</div>
-					<button type="submit" class="btn pull-right btn-default " float="right">Search</button>
+					<button type="submit" class="btn pull-right btn-default" float="right">Search</button>
 				</form> 
 
 				<! on submit call js function>
 				<script> 
 					document.getElementById("searchForm").onsubmit = function(){
+						setDefault();
+						alert(spoint.value + " " + epoint.value);
 						updateRoute(spoint,epoint);
 						return false;
 						};
 				</script>
+
+			<div class="container-fluid">
+				<select class="dropdown" id="routeNum" onchange="changeRoute(routeNum)">
+				  <!--option selected>Route to follow</option-->
+				  <option  selected disabled value="0" for="routeNum" id="routeNum1" name="routeNum">Route 1</option>
+				  <option  			  disabled value="1" for="routeNum" id="routeNum2" name="routeNum">Route 2</option>
+				  <option  			  disabled value="2" for="routeNum" id="routeNum3" name="routeNum">Route 3</option>
+				</select>
+			</div>
+
+
+			<div class="col-sm-12" style="height=75vh;width=75wv;"><div class="directions" id="directions" ></div></div>
+
+
     </div>
 
 	<div class="col-sm-9" id="map" style=.map>
 	</div>
-
-
 
   </div>
 </div>
