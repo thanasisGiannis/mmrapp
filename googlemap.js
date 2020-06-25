@@ -11,11 +11,11 @@ var slon = 21.7361790;
 var dlat = 38.2466404;
 var dlon = 21.7361404;
 
-var ts   = 1573735815;
-var te   = ts + 10000000;//1573737192;
+var ts   = 1592487000;// 1592235600;
+var te   ;//= ts + 10000000;//1573737192;
 var mod  = 'pub'; // koumpia
 var obj  = 'multi';
-var skip;// = ['tram']; // checkbox
+var skip ;//x=  ['tram'];//['bus']; // checkbox
 var globalPolyMap=[];
 var globalMarkerMap=[];
 
@@ -38,6 +38,7 @@ function changeRoute(routeNum){
 
 function updateMod(modButton){
 	
+	mainRoute=0;
 	mod = modButton;
 	queryRoute();
 	return false;	
@@ -53,8 +54,12 @@ function setDefault(){
 	dlat = 38.2466404;
 	dlon = 21.7361404;
 
-	ts   = 1573735815;
-	te   = ts + 10000000;//1573737192;
+	var d = new Date();
+  	var ms = d.getTime();	
+	ts = Math.round(ms/1000); // round to nearest second
+
+//	ts = 1573737192;
+	te;//   = ts + 10000000;//1573737192;
 	mod  = 'pub'; // koumpia
 	obj  = 'multi';
 	skip;// = ['tram']; // checkbox
@@ -306,19 +311,80 @@ function removeDirections(){
 
 
 
-function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE){
+
+function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time){
+
+	   leaveTime = toDate(leaveTime);
+		arrivalTime = toDate(arrivalTime);
+		arrivalTimeE = toDate(arrivalTimeE);
+
+		travel_time = travel_time / 60 + " min";
+//		walk_time = walk_time / 60 + " min";
+		//alert( desc + distance+ travel_time+ walk_time);
+		var testing = false;
+		if (!testing && type === "walk"){
+
+			if(walk_time === undefined){
+					outputMessage = "Walk towards "+streetE+ " "+
+												 "Arrival Time: " +arrivalTimeE;
+
+			}else{
+
+					outputMessage = "Walk towards "+streetE+ " for "+ walk_time+" minutes. "+
+												 "Arrival Time: " +arrivalTimeE;
+			}
+			
+		}else if ( !testing &&  type === "bus" ){
+			//var desc = "Dromologio Tade";
+			outputMessage = desc + " \nusing bus towards " + streetE + " for "+ travel_time+
+								 "\nLeave Time: "+leaveTime + " "+
+								 "\nArrival Time: "+arrivalTimeE;
+
+		}else if ( !testing &&  type === "car" ){
+			outputMessage = "Drive towards " + streetE + " "+
+								 "Leave Time: "+leaveTime + "\n"+
+								 "Arrival Time: "+arrivalTimeE+"\n"+
+								 "Time to destination: 0min" ;
+
+		}else if ( !testing &&  type === "rail" ){
+			//var desc = "Dromologio Tade";
+			outputMessage = desc + " using rail towards " + streetE + " for "+ travel_time+
+								 " Leave Time: "+leaveTime + " "+
+								 "Arrival Time: "+arrivalTimeE;
+
+		}else if ( !testing &&  type === "subway" ){
+			//var desc = "Dromologio Tade";
+			outputMessage = desc + " using subway towards " + streetE + " for "+ travel_time+
+								 " Leave Time: "+leaveTime + " "+
+								 "Arrival Time: "+arrivalTimeE;
+
+		}else if ( !testing &&  type === "tram" ){
+			//var desc = "Dromologio Tade";
+			outputMessage = desc + " using tram towards " + streetE + " for "+ travel_time+
+								 " Leave Time: "+leaveTime + " "+
+								 "Arrival Time: "+arrivalTimeE;
+
+		}else if ( !testing &&  type === "ferry" ){
+			//var desc = "Dromologio Tade";
+			outputMessage = desc + " using ferry towards " + streetE + " for "+ travel_time+
+								 " Leave Time: "+leaveTime + " "+
+								 "Arrival Time: "+arrivalTimeE;
+
+		}else if ( !testing &&  type === "trolleybus" ){
+			//var desc = "Dromologio Tade";
+			outputMessage = desc + " using trolleybus towards " + streetE + " for "+ travel_time+
+								 " Leave Time: "+leaveTime + " "+
+								 "Arrival Time: "+arrivalTimeE;
+
+	   }else{
+			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
+		}
 
 
-	outputMessage = "Street: "+street+"\n"+
-						 "Arrival Time: "+arrivalTime+"\n"+
-						 "Leave Time: "+leaveTime + "\n"+
-						 "Wait Time: "+waitTime + "\n"+
-						 "Using: " +type+"\n";
-
-	var node = document.createElement("P");                 // Create a <li> node
-	var textnode = document.createTextNode(outputMessage);         // Create a text node
-	node.appendChild(textnode);                              // Append the text to <li>
-	document.getElementById("directions").appendChild(node);     // Append <li> to <ul> with id="myList" 
+	var node = document.createElement("pre");
+	var textnode = document.createTextNode(outputMessage);
+	node.appendChild(textnode);                           
+	document.getElementById("directions").appendChild(node);
 
 	return false;
 }
@@ -373,6 +439,7 @@ function queryRoute(){
 
 
 	// Draw polylines on google map 
+
 	var numRoutes = jsonRoutes.routes.length; 
 
 	if(mainRoute>=numRoutes){
@@ -406,6 +473,13 @@ function queryRoute(){
 		var waitTime    = jsonRoutes.routes[j].legs[i].extra_data[0][2];//leaveTime-arrivalTime;
 		var leaveTime   = arrivalTime + waitTime;//jsonRoutes.routes[j].legs[i].extra_data[0][1];
 		var street = jsonRoutes.routes[j].legs[i].extra_data[0][0];
+
+
+		var desc = jsonRoutes.routes[j].legs[i].desc;
+		var distance = jsonRoutes.routes[j].legs[i].distance;
+		var travel_time = jsonRoutes.routes[j].legs[i].travel_time;
+		var walk_time = jsonRoutes.routes[j].legs[i].walk_time;
+
 		if(i==0){
 			arrivalTime=0;
 		}
@@ -423,9 +497,8 @@ function queryRoute(){
 		/* + street,arrivalTime,leaveTime,waitTime */
 		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE);
 
-		
-		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE);
-
+		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time);
+		/* add desc, distance, travel_time, walk_time */
 	}
 
 
@@ -447,9 +520,9 @@ function queryRoute(){
 			document.getElementById("routeNum2").disabled=true;
 			document.getElementById("routeNum3").disabled=true;
 		} 
-		var routeNumUp=mainRoute+1;
-		document.getElementById("routeNum"+routeNumUp).checked=true;
 
+		var routeNumUp = mainRoute+1;
+		document.getElementById("routeNum"+routeNumUp).selected=true;
 	return false;	
 }
 
