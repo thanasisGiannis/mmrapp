@@ -15,7 +15,7 @@ var ts   = 1592487000;// 1592235600;
 var te   ;//= ts + 10000000;//1573737192;
 var mod  = 'pub'; // koumpia
 var obj  = 'multi';
-var skip ;//x=  ['tram'];//['bus']; // checkbox
+var skip ;//= ['bus'];//x=  ['tram'];//['bus']; // checkbox
 var globalPolyMap=[];
 var globalMarkerMap=[];
 
@@ -318,63 +318,78 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 		arrivalTime = toDate(arrivalTime);
 		arrivalTimeE = toDate(arrivalTimeE);
 
-		travel_time = travel_time / 60 + " min";
-//		walk_time = walk_time / 60 + " min";
+
+		walk_time = Number(walk_time);
+		var h = Math.floor(walk_time / 3600);
+		var m = Math.floor(walk_time % 3600 / 60);
+		var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours") : "";
+		var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes") : "";
+		var outputwalk_time =  hDisplay + mDisplay; 
+
+		
+		travel_time = Number(travel_time);
+		h = Math.floor(travel_time / 3600);
+		m = Math.floor(travel_time % 3600 / 60);
+		hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours") : "";
+		mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes") : "";
+		var outputtravel_time =  hDisplay + mDisplay; 
+
+		distance = distance/ 1000;
+		distance = distance.toFixed(1) + "km";
 		//alert( desc + distance+ travel_time+ walk_time);
 		var testing = false;
 		if (!testing && type === "walk"){
-
-			if(walk_time === undefined){
-					outputMessage = "Walk towards "+streetE+ " "+
-												 "Arrival Time: " +arrivalTimeE;
-
-			}else{
-
-					outputMessage = "Walk towards "+streetE+ " for "+ walk_time+" minutes. "+
-												 "Arrival Time: " +arrivalTimeE;
-			}
-			
+					outputMessage = "Walk to "+streetE +
+										 "\nDept. Time: "+leaveTime+ 
+										 "\nTravel Time: "+ outputwalk_time + 
+										 "\nDistance: "+distance;
 		}else if ( !testing &&  type === "bus" ){
 			//var desc = "Dromologio Tade";
-			outputMessage = desc + " \nusing bus towards " + streetE + " for "+ travel_time+
-								 "\nLeave Time: "+leaveTime + " "+
-								 "\nArrival Time: "+arrivalTimeE;
+			outputMessage = desc + " \nBus to " + streetE +
+								 "\nDept. Time: "+leaveTime + " "+
+								 "\nTravel Time: "+ outputtravel_time + 
+								 "\nDistance: "+distance;
 
 		}else if ( !testing &&  type === "car" ){
-			outputMessage = "Drive towards " + streetE + " "+
-								 "Leave Time: "+leaveTime + "\n"+
-								 "Arrival Time: "+arrivalTimeE+"\n"+
-								 "Time to destination: 0min" ;
+			outputMessage = "Drive to " + streetE +
+								 "\nDept. Time: "+leaveTime + " "+
+								 "\nTravel Time: "+ outputtravel_time + 
+								 "\nDistance: "+distance;
 
 		}else if ( !testing &&  type === "rail" ){
 			//var desc = "Dromologio Tade";
-			outputMessage = desc + " using rail towards " + streetE + " for "+ travel_time+
-								 " Leave Time: "+leaveTime + " "+
-								 "Arrival Time: "+arrivalTimeE;
+			outputMessage = desc + " \nRail to " + streetE +
+								 "\nDept. Time: "+leaveTime + " "+
+								 "\nTravel Time: "+ outputtravel_time;
 
 		}else if ( !testing &&  type === "subway" ){
 			//var desc = "Dromologio Tade";
-			outputMessage = desc + " using subway towards " + streetE + " for "+ travel_time+
-								 " Leave Time: "+leaveTime + " "+
-								 "Arrival Time: "+arrivalTimeE;
+			outputMessage = desc + " \nSubway to " + streetE +
+								 "\nDept. Time: "+leaveTime + " "+
+								 "\nTravel Time: "+ outputtravel_time + 
+								 "\nDistance: "+distance;
 
 		}else if ( !testing &&  type === "tram" ){
 			//var desc = "Dromologio Tade";
-			outputMessage = desc + " using tram towards " + streetE + " for "+ travel_time+
-								 " Leave Time: "+leaveTime + " "+
-								 "Arrival Time: "+arrivalTimeE;
+			outputMessage = desc + " \nTram to " + streetE +
+								 "\nDept. Time: "+leaveTime + " "+
+								 "\nTravel Time: "+ outputtravel_time + 
+								 "\nDistance: "+distance;
+
 
 		}else if ( !testing &&  type === "ferry" ){
 			//var desc = "Dromologio Tade";
-			outputMessage = desc + " using ferry towards " + streetE + " for "+ travel_time+
-								 " Leave Time: "+leaveTime + " "+
-								 "Arrival Time: "+arrivalTimeE;
+			outputMessage = desc + " \nFerry to " + streetE +
+								 "\nDept. Time: "+leaveTime + " "+
+								 "\nTravel Time: "+ outputtravel_time + 
+								 "\nDistance: "+distance;
 
 		}else if ( !testing &&  type === "trolleybus" ){
 			//var desc = "Dromologio Tade";
-			outputMessage = desc + " using trolleybus towards " + streetE + " for "+ travel_time+
-								 " Leave Time: "+leaveTime + " "+
-								 "Arrival Time: "+arrivalTimeE;
+			outputMessage = desc + " \nTorlleybus to " + streetE +
+								 "\nDept. Time: "+leaveTime + " "+
+								 "\nTravel Time: "+ outputtravel_time + 
+								 "\nDistance: "+distance;
 
 	   }else{
 			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
@@ -437,10 +452,24 @@ function queryRoute(){
 
 	}
 
+	
 
 	// Draw polylines on google map 
 
 	var numRoutes = jsonRoutes.routes.length; 
+
+
+/*
+	var outputvar = "";
+	for(var i=0;i<numRoutes;i++){
+		for(var j=0;j<jsonRoutes.routes[i].object.length;j++){
+			outputvar = outputvar + " "+ i+ " " + jsonRoutes.routes[i].object[j];
+		}
+
+	}
+
+	alert(outputvar);
+*/
 
 	if(mainRoute>=numRoutes){
 		mainRoute = numRoutes-1;
@@ -478,8 +507,7 @@ function queryRoute(){
 		var desc = jsonRoutes.routes[j].legs[i].desc;
 		var distance = jsonRoutes.routes[j].legs[i].distance;
 		var travel_time = jsonRoutes.routes[j].legs[i].travel_time;
-		var walk_time = jsonRoutes.routes[j].legs[i].walk_time;
-
+		var walk_time = jsonRoutes.routes[j].legs[i].travel_time;
 		if(i==0){
 			arrivalTime=0;
 		}
@@ -523,6 +551,44 @@ function queryRoute(){
 
 		var routeNumUp = mainRoute+1;
 		document.getElementById("routeNum"+routeNumUp).selected=true;
+
+
+		/* clear dropdown route directions */
+		document.getElementById("routeNum1").innerText = "";				
+		document.getElementById("routeNum2").innerText = "";				
+		document.getElementById("routeNum3").innerText = "";				
+
+		/* naming the buttons */
+		switch(numRoutes){
+			/* for route 1 button */
+			case 1:
+				document.getElementById("routeNum1").innerText = "Earliest Arrival / Minimum Number of Transfers";				
+				document.getElementById("routeNum1").hidden = false;				
+				document.getElementById("routeNum2").hidden = true;				
+				document.getElementById("routeNum3").hidden = true;				
+				break;
+			/* for route 2 button */
+			case 2:
+				document.getElementById("routeNum1").innerText = "Earliest Arrival";				
+				document.getElementById("routeNum2").innerText = "Minimum Number of Transfers";				
+		
+				document.getElementById("routeNum1").hidden = false;				
+				document.getElementById("routeNum2").hidden = false;				
+				document.getElementById("routeNum3").hidden = true;				
+				break;
+			/* for route 3 button */
+			case 3:
+				document.getElementById("routeNum1").innerText = "Earliest Arrival";				
+				document.getElementById("routeNum2").innerText = "Minimum Number of Transfers";				
+				document.getElementById("routeNum3").innerText = "Intermediate Solution";		
+
+				document.getElementById("routeNum1").hidden = false;				
+				document.getElementById("routeNum2").hidden = false;				
+				document.getElementById("routeNum3").hidden = false;						
+				break;
+			default:
+				alert();
+		}
 	return false;	
 }
 

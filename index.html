@@ -58,11 +58,11 @@
 						  <div class="modal-body">
 								<form id="buttonCheckBox">
 									<input type='radio' class='radio-button' id="tmpmod1" name="tmpmod" value="pc">
-										<label for="tmpmod1"> PC </label><br>
+										<label for="tmpmod1"> Last Leg </label><br>
 									<input type='radio' class='radio-button' id="tmpmod2" name="tmpmod" value="cpc">
-										<label for="tmpmod2"> CPC </label><br>
+										<label for="tmpmod2"> Both Legs </label><br>
 									<input type='radio' class='radio-button' id="tmpmod3" name="tmpmod" value="cp">
-										<label for="tmpmod3"> CP </label><br>
+										<label for="tmpmod3"> First Leg  </label><br>
 								  <input type="button" value="Submit" id='hybridChoices' class="btn btn-default">
 								</form>
 	
@@ -127,11 +127,11 @@
 				</script>
 
 			<div class="container-fluid">
-				<select class="dropdown" id="routeNum" onchange="changeRoute(routeNum)">
+				<select class="dropdown" id="routeNum" onchange="changeRoute(routeNum)" >
 				  <!--option selected>Route to follow</option-->
-				  <option  selected disabled value="0" for="routeNum" id="routeNum1" name="routeNum">Route 1</option>
-				  <option  			  disabled value="1" for="routeNum" id="routeNum2" name="routeNum">Route 2</option>
-				  <option  			  disabled value="2" for="routeNum" id="routeNum3" name="routeNum">Route 3</option>
+				  <option  selected disabled value="0" for="routeNum" id="routeNum1" name="routeNum">Routes</option>
+				  <option  hidden   disabled value="1" for="routeNum" id="routeNum2" name="routeNum"></option>
+				  <option  hidden   disabled value="2" for="routeNum" id="routeNum3" name="routeNum"></option>
 				</select>
 			</div>
 
