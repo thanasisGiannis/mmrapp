@@ -25,6 +25,8 @@ var lineExists = 0;
 var mainRoute=0;
 var contextMenuDisplayed = false;
 
+var contextMenuSpoint = undefined;
+var contextMenuDpoint = undefined;
 
 function changeRoute(routeNum){
 //	alert(routeNum.value);
@@ -85,7 +87,7 @@ function googleMapCallback(){
 }
 
 
-function showPosition(position) {
+function myPositionInMap(position) {
 
 	/* Fill in the Starting Point with the user's location */
 	slat = position.coords.latitude;
@@ -128,7 +130,7 @@ function errorGeolocation(err){
 function getLocation() {
   if (navigator.geolocation) {
 	//console.log('hey');
-   navigator.geolocation.getCurrentPosition(showPosition,errorGeolocation,{timeout:1000});
+   navigator.geolocation.getCurrentPosition(myPositionInMap,errorGeolocation,{timeout:1000});
   } else {
     console.log("Geolocation is not supported by this browser.");
   }
@@ -160,6 +162,10 @@ function sPointSetMenu(){
 
 	console.log(HttpreqGoogleS.responseText);
 
+	if(contextMenuSpoint!=undefined){
+		contextMenuSpoint.setMap(null);
+	}
+
 	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
 	var markerS = new google.maps.Marker({
 			 position: contextLatLng,
@@ -169,6 +175,7 @@ function sPointSetMenu(){
 
 	globalMarkerMap.push(markerS);
 
+	contextMenuSpoint=markerS;
 
 	document.getElementById("spoint").value=messageS;
 	document.getElementById("spoint").placeholder=messageS;
@@ -202,6 +209,11 @@ function dPointSetMenu(){
 
 	console.log(HttpreqGoogleS.responseText);
 
+	if(contextMenuDpoint!=undefined){
+		contextMenuDpoint.setMap(null);
+	}
+
+
 	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
 	var markerS = new google.maps.Marker({
 			 position: contextLatLng,
@@ -210,6 +222,7 @@ function dPointSetMenu(){
 		 });
 
 	globalMarkerMap.push(markerS);
+	contextMenuDpoint=markerS;
 
 	document.getElementById("epoint").value=messageS;
 	document.getElementById("epoint").placeholder=messageS;
@@ -767,11 +780,58 @@ function queryRoute(){
 
 	map.setCenter(new google.maps.LatLng(clat, clon));
 	map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-
+	
 	/* map zooming to fit spoint and dpoint */
+
+	var maxLat;
+	var maxLon;
+	var minLat;
+	var minLon;
+
+	
+
+	var j=mainRoute;
+	var latlngb = [];
+	numIter = jsonRoutes.routes[j].legs.length;
+	for(var i=0; i<numIter; i++){
+		route = jsonRoutes.routes[j].legs[i].coordinates;
+		for(var k = 0 ; k<route.length;k++){
+			var coor = route[k];
+
+			if (i==0 && k==0){
+				maxLat = coor[0];
+				minLat = coor[0];
+
+				maxLon = coor[1];
+				minLon = coor[1];
+				continue;
+			}
+
+
+			if(maxLat < coor[0]){
+				maxLat = coor[0];		
+			}
+			if(minLat > coor[0]){
+				minLat = coor[0];		
+			}
+
+			if(maxLon < coor[1]){
+				maxLon = coor[1];		
+			}
+			if(minLon > coor[1]){
+				minLon = coor[1];		
+			}
+
+
+
+		}
+	}
+
+
+
 	var latlngb = [
-		 new google.maps.LatLng(slat, slon),
-		 new google.maps.LatLng(dlat, dlon),
+		 new google.maps.LatLng(maxLat, maxLon),
+		 new google.maps.LatLng(minLat, minLon),
 	]; 
 
 	var latlngbounds = new google.maps.LatLngBounds();
