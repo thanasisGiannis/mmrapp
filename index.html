@@ -5,10 +5,12 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I&callback=initMap&libraries=places&callback=googleMapCallback"></script>
-	<script src="./googlemap.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	 <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I&libraries=places"></script>
+    <script src="./googlemap.js"></script>
 	<style>
 		/* Set the size of the div element that contains the map */
 		#map {
@@ -23,10 +25,35 @@
 		  overflow-y:auto;
 		}
 
+
+
+
+		.menu {
+			width: 150px;
+			box-shadow: 3px 3px 5px #888888;
+			border-style: solid;
+			border-width: 1px;
+			border-color: grey;
+			border-radius: 2px;
+			position: fixed;
+			display: none;
+		}
+
+		.menu-item {
+			height: 20px;
+			background-color: white;
+		}
+
+		.menu-item:hover {
+			background-color: #6CB5FF;
+			cursor: pointer;
+		}
+
+
 	</style>
 
 </head>
-<body>
+<body onload="googleMapCallback();">
 
 <div class="jumbotron text-center">
   <h1>Multimodal Route Planner</h1>
@@ -120,7 +147,7 @@
 				<! on submit call js function>
 				<script> 
 					document.getElementById("searchForm").onsubmit = function(){
-						setDefault();
+						//setDefault();
 						updateRoute(spoint,epoint);
 						return false;
 						};
@@ -141,11 +168,13 @@
 
     </div>
 
-	<div class="col-sm-9" id="map" style=.map>
-	</div>
+	<div class="col-sm-9" id="map" style=.map></div>
 
-  </div>
-</div>
+	<div class="menu" id="contextGoogleMapsMenu">
+            <div class="menu-item" onclick="sPointSetMenu()">From here</div>
+            <div class="menu-item" onclick="dPointSetMenu()">Towards here</div>
+   </div>
+
 
 </body>
 </html>

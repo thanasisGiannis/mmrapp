@@ -5,11 +5,13 @@ var map;
 // Global Variables for accessing data
 // default dummy values
 var lg   = 'en';
-var slat = 38.2466036;
-var slon = 21.7361790;
+var slat;// = 38.2466036;
+var slon;// = 21.7361790;
 
-var dlat = 38.2466404;
-var dlon = 21.7361404;
+var dlat;// = 38.2466404;
+var dlon;// = 21.7361404;
+
+var contextLatLng;
 
 var ts   = 1592487000;// 1592235600;
 var te   ;//= ts + 10000000;//1573737192;
@@ -21,8 +23,7 @@ var globalMarkerMap=[];
 
 var lineExists = 0;
 var mainRoute=0;
-
-
+var contextMenuDisplayed = false;
 
 
 function changeRoute(routeNum){
@@ -54,6 +55,10 @@ function setDefault(){
 	dlat = 38.2466404;
 	dlon = 21.7361404;
 
+
+
+
+
 	var d = new Date();
   	var ms = d.getTime();	
 	ts = Math.round(ms/1000); // round to nearest second
@@ -74,7 +79,143 @@ function googleMapCallback(){
 	initMap();
 	initAutocomplete('spoint');
 	initAutocomplete('epoint');
+	setDefault();
+	getLocation();
 	return false;
+}
+
+
+function showPosition(position) {
+
+	/* Fill in the Starting Point with the user's location */
+	slat = position.coords.latitude;
+	slon = position.coords.longitude;
+
+//	slat = 38.2466036;
+//	slon = 21.7361790;
+
+	var route = [];
+	route.push({lat: slat, lng: slon});
+
+
+
+	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=slat,slon&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
+
+	var HttpreqGoogleS = new XMLHttpRequest(); // a new request
+	HttpreqGoogleS.open("GET",googleURL1,false);
+	HttpreqGoogleS.send();
+	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
+
+
+	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
+	var markerS = new google.maps.Marker({
+			 position: route[0],
+			 map: map,
+			title: messageS
+		 });
+
+
+	document.getElementById("spoint").value=messageS;
+	document.getElementById("spoint").placeholder=messageS;
+
+
+}
+function errorGeolocation(err){
+	console.log(err);
+}
+
+
+function getLocation() {
+  if (navigator.geolocation) {
+	//console.log('hey');
+   navigator.geolocation.getCurrentPosition(showPosition,errorGeolocation,{timeout:1000});
+  } else {
+    console.log("Geolocation is not supported by this browser.");
+  }
+}
+
+
+function sPointSetMenu(){
+
+
+	if (contextMenuDisplayed == true){
+		  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
+				 menuBox.style.display = "none";
+	}
+
+
+	var latLng = contextLatLng.toString(); 
+	latLng = latLng.replace('(','');
+	latLng = latLng.replace(')','');
+
+	latLng = latLng.split(",");
+	console.log(latLng);
+
+	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
+
+	var HttpreqGoogleS = new XMLHttpRequest(); // a new request
+	HttpreqGoogleS.open("GET",googleURL1,false);
+	HttpreqGoogleS.send();
+	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
+
+	console.log(HttpreqGoogleS.responseText);
+
+	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
+	var markerS = new google.maps.Marker({
+			 position: contextLatLng,
+			 map: map,
+			title: messageS
+		 });
+
+	globalMarkerMap.push(markerS);
+
+
+	document.getElementById("spoint").value=messageS;
+	document.getElementById("spoint").placeholder=messageS;
+
+
+
+
+	//alert('spoint set');
+}
+
+function dPointSetMenu(){
+
+	if (contextMenuDisplayed == true){
+		  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
+				 menuBox.style.display = "none";
+	}
+
+	var latLng = contextLatLng.toString(); 
+	latLng = latLng.replace('(','');
+	latLng = latLng.replace(')','');
+
+	latLng = latLng.split(",");
+	console.log(latLng);
+
+	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
+
+	var HttpreqGoogleS = new XMLHttpRequest(); // a new request
+	HttpreqGoogleS.open("GET",googleURL1,false);
+	HttpreqGoogleS.send();
+	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
+
+	console.log(HttpreqGoogleS.responseText);
+
+	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
+	var markerS = new google.maps.Marker({
+			 position: contextLatLng,
+			 map: map,
+			title: messageS
+		 });
+
+	globalMarkerMap.push(markerS);
+
+	document.getElementById("epoint").value=messageS;
+	document.getElementById("epoint").placeholder=messageS;
+
+
+
 }
 
 
@@ -88,6 +229,40 @@ function initMap() {
         });
 
 	map = localmap;
+
+
+	map.addListener('rightclick', function(e) {
+
+
+		contextLatLng = e.latLng;
+	
+		var menuBox = document.getElementById("contextGoogleMapsMenu");
+		var localmap = document.getElementById("map");		
+		//menuBox.style.left = left + "px";
+		//menuBox.style.top  = top + "px";
+		var leftS = localmap.getBoundingClientRect().left + e.pixel.x;
+		var topS  = localmap.getBoundingClientRect().top  + e.pixel.y;
+		
+		menuBox.style.left = leftS + "px";
+		menuBox.style.top  = topS  + "px";
+
+	
+		menuBox.style.display = "block";
+		contextMenuDisplayed = true;
+ 
+	});
+
+
+
+	map.addListener("click", function (e)
+	{
+		if (contextMenuDisplayed == true)
+	 	{
+	  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
+			 menuBox.style.display = "none";
+		}
+	});
+
 	return false;
 }
 
@@ -136,21 +311,6 @@ function fillInAddress() {
       var val = place.address_components[i][componentForm[addressType]];
       document.getElementById(addressType).value = val;
     }
-  }
-
-	return false;
-}
-function geolocate() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var geolocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      var circle = new google.maps.Circle(
-          {center: geolocation, radius: position.coords.accuracy});
-      autocomplete.setBounds(circle.getBounds());
-    });
   }
 
 	return false;
@@ -314,6 +474,7 @@ function removeDirections(){
 
 function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time){
 
+
 	   leaveTime = toDate(leaveTime);
 		arrivalTime = toDate(arrivalTime);
 		arrivalTimeE = toDate(arrivalTimeE);
@@ -392,7 +553,8 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 								 "\nDistance: "+distance;
 
 	   }else{
-			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
+			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination:" + distance;
+//			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
 		}
 
 
@@ -436,21 +598,19 @@ function queryRoute(){
 	}
 
 
-	if(lineExists > 0 ){
-
-		/* Clear Map from Routes*/
-		var numIter = globalPolyMap.length;
-		for(var i=0;i<numIter;i++){
-			globalPolyMap[i].setMap(null);
-		}
-		
-		/* Clear Map from Markers*/
-		numIter = globalMarkerMap.length;
-		for(var i=0;i<numIter;i++){
-			globalMarkerMap[i].setMap(null);
-		}
-
+	/* Clear Map from Routes*/
+	var numIter = globalPolyMap.length;
+	for(var i=0;i<numIter;i++){
+		globalPolyMap[i].setMap(null);
 	}
+	
+	/* Clear Map from Markers*/
+	numIter = globalMarkerMap.length;
+	console.log(numIter);
+	for(var i=0;i<numIter;i++){
+		globalMarkerMap[i].setMap(null);
+	}
+
 
 	
 
@@ -475,6 +635,10 @@ function queryRoute(){
 		mainRoute = numRoutes-1;
 	}
 
+
+
+/* alternative routes, if want to be seen un-comment this section */
+/*
 	for(var j=0; j<numRoutes; j++){
 		if(j==mainRoute){
 			continue;
@@ -487,16 +651,21 @@ function queryRoute(){
 			drawLineMap(route,'',false,"","","","","","");
 		}
 	}
-
+*/
 	/* Draw lines with colors */
 	var j=mainRoute;
-	numIter = jsonRoutes.routes[j].legs.length;
-	
+
 	removeDirections();
+	numIter = jsonRoutes.routes[j].legs.length;
+	var totalTimeTravel = jsonRoutes.routes[j].travel_time;
+	var totalDistanceTravel = jsonRoutes.routes[j].distance;
+	//alert(totalTimeTravel);
+	addDirections("total","","","","","","","", totalDistanceTravel, totalTimeTravel, "");
 	for(var i=0; i<numIter; i++){
 		var route = jsonRoutes.routes[j].legs[i].coordinates;
 		var type  = jsonRoutes.routes[j].legs[i].type;
 		
+
 		arrivalTime = jsonRoutes.routes[j].legs[i].extra_data[0][1];
 		
 		var waitTime    = jsonRoutes.routes[j].legs[i].extra_data[0][2];//leaveTime-arrivalTime;
@@ -589,6 +758,29 @@ function queryRoute(){
 			default:
 				alert();
 		}
+
+
+	/* map cenetering */
+
+	var clat = Math.abs(slat+dlat)/2;
+	var clon = Math.abs(slon+dlon)/2;
+
+	map.setCenter(new google.maps.LatLng(clat, clon));
+	map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+
+	/* map zooming to fit spoint and dpoint */
+	var latlngb = [
+		 new google.maps.LatLng(slat, slon),
+		 new google.maps.LatLng(dlat, dlon),
+	]; 
+
+	var latlngbounds = new google.maps.LatLngBounds();
+
+	for (var i = 0; i < latlngb.length; i++) {
+		 latlngbounds.extend(latlngb[i]);
+	}
+	map.fitBounds(latlngbounds);
+
 	return false;	
 }
 
