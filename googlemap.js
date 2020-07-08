@@ -27,6 +27,7 @@ var contextMenuDisplayed = false;
 
 var contextMenuSpoint = undefined;
 var contextMenuDpoint = undefined;
+var pointsInMap = 0;
 
 function changeRoute(routeNum){
 //	alert(routeNum.value);
@@ -181,7 +182,11 @@ function sPointSetMenu(){
 	document.getElementById("spoint").placeholder=messageS;
 
 
-
+	if(pointsInMap == 1){
+		updateRoute(spoint,epoint);
+	}else{
+		pointsInMap = pointsInMap + 1;
+	}
 
 	//alert('spoint set');
 }
@@ -227,6 +232,11 @@ function dPointSetMenu(){
 	document.getElementById("epoint").value=messageS;
 	document.getElementById("epoint").placeholder=messageS;
 
+	if(pointsInMap == 1){
+		updateRoute(spoint,epoint);
+	}else{
+		pointsInMap = pointsInMap + 1;
+	}
 
 
 }
