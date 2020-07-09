@@ -27,7 +27,9 @@ var contextMenuDisplayed = false;
 
 var contextMenuSpoint = undefined;
 var contextMenuDpoint = undefined;
-var pointsInMap = 0;
+//var pointsInMap = 0;
+var pointSinMap = false;
+var pointDinMap = false;
 
 function changeRoute(routeNum){
 //	alert(routeNum.value);
@@ -68,7 +70,9 @@ function setDefault(){
 
 //	ts = 1573737192;
 	te;//   = ts + 10000000;//1573737192;
-	mod  = 'pub'; // koumpia
+//	mod  = 'pub'; // koumpia
+	mod  = 'car'; // koumpia
+
 	obj  = 'multi';
 	skip;// = ['tram']; // checkbox
 
@@ -181,13 +185,14 @@ function sPointSetMenu(){
 	document.getElementById("spoint").value=messageS;
 	document.getElementById("spoint").placeholder=messageS;
 
-
-	if(pointsInMap == 1){
+	if(pointDinMap == true){
 		updateRoute(spoint,epoint);
+		pointSinMap = true;
 	}else{
-		pointsInMap = pointsInMap + 1;
+		pointSinMap = true;
 	}
 
+	return false;
 	//alert('spoint set');
 }
 
@@ -232,13 +237,14 @@ function dPointSetMenu(){
 	document.getElementById("epoint").value=messageS;
 	document.getElementById("epoint").placeholder=messageS;
 
-	if(pointsInMap == 1){
+	if(pointSinMap == true){
 		updateRoute(spoint,epoint);
+		pointDinMap = true;
 	}else{
-		pointsInMap = pointsInMap + 1;
+		pointDinMap = true;
 	}
 
-
+	return false;
 }
 
 
@@ -497,6 +503,11 @@ function removeDirections(){
 
 function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time){
 
+		var imgSrc = "";
+
+		/* */
+		
+
 
 	   leaveTime = toDate(leaveTime);
 		arrivalTime = toDate(arrivalTime);
@@ -514,8 +525,8 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 		travel_time = Number(travel_time);
 		h = Math.floor(travel_time / 3600);
 		m = Math.floor(travel_time % 3600 / 60);
-		hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours") : "";
-		mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes") : "";
+		hDisplay = h > 0 ? h + (h == 1 ? " hour " : " hours ") : "";
+		mDisplay = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
 		var outputtravel_time =  hDisplay + mDisplay; 
 
 		distance = distance/ 1000;
@@ -523,36 +534,37 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 		//alert( desc + distance+ travel_time+ walk_time);
 		var testing = false;
 		if (!testing && type === "walk"){
-					outputMessage = "Walk to "+streetE +
+			outputMessage = "Walk to "+streetE +
 										 "\nDept. Time: "+leaveTime+ 
 										 "\nTravel Time: "+ outputwalk_time + 
 										 "\nDistance: "+distance;
+			imgSrc = './img/walk3ar.png';
 		}else if ( !testing &&  type === "bus" ){
 			//var desc = "Dromologio Tade";
 			outputMessage = desc + " \nBus to " + streetE +
 								 "\nDept. Time: "+leaveTime + " "+
 								 "\nTravel Time: "+ outputtravel_time + 
 								 "\nDistance: "+distance;
-
+			imgSrc = './img/busar.png';
 		}else if ( !testing &&  type === "car" ){
 			outputMessage = "Drive to " + streetE +
 								 "\nDept. Time: "+leaveTime + " "+
 								 "\nTravel Time: "+ outputtravel_time + 
 								 "\nDistance: "+distance;
-
+			imgSrc = './img/car2m.png';
 		}else if ( !testing &&  type === "rail" ){
 			//var desc = "Dromologio Tade";
 			outputMessage = desc + " \nRail to " + streetE +
 								 "\nDept. Time: "+leaveTime + " "+
 								 "\nTravel Time: "+ outputtravel_time;
-
+			imgSrc = './img/trainar.png';
 		}else if ( !testing &&  type === "subway" ){
 			//var desc = "Dromologio Tade";
 			outputMessage = desc + " \nSubway to " + streetE +
 								 "\nDept. Time: "+leaveTime + " "+
 								 "\nTravel Time: "+ outputtravel_time + 
 								 "\nDistance: "+distance;
-
+			imgSrc = './img/subwayar.png';
 		}else if ( !testing &&  type === "tram" ){
 			//var desc = "Dromologio Tade";
 			outputMessage = desc + " \nTram to " + streetE +
@@ -560,30 +572,58 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 								 "\nTravel Time: "+ outputtravel_time + 
 								 "\nDistance: "+distance;
 
-
+			imgSrc = './img/tramar.png';
 		}else if ( !testing &&  type === "ferry" ){
 			//var desc = "Dromologio Tade";
 			outputMessage = desc + " \nFerry to " + streetE +
 								 "\nDept. Time: "+leaveTime + " "+
 								 "\nTravel Time: "+ outputtravel_time + 
 								 "\nDistance: "+distance;
-
+			imgSrc = './img/ferryar.png';
 		}else if ( !testing &&  type === "trolleybus" ){
 			//var desc = "Dromologio Tade";
 			outputMessage = desc + " \nTorlleybus to " + streetE +
 								 "\nDept. Time: "+leaveTime + " "+
 								 "\nTravel Time: "+ outputtravel_time + 
 								 "\nDistance: "+distance;
-
+			imgSrc = './img/trolleybusar.png';
 	   }else{
 			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination:" + distance;
 //			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
+			imgSrc = "";
 		}
 
 
-	var node = document.createElement("pre");
+
+
+
+
+
+
+
+	var imageNode = document.createElement('img');
+	imageNode.src  = imgSrc;
+	imageNode.style.height = "9vh";
+	imageNode.style.width  = "4vw";
+	imageNode.style.float = "left";
+
+	
+
+
 	var textnode = document.createTextNode(outputMessage);
-	node.appendChild(textnode);                           
+
+	var nodeInfo = document.createElement("pre");
+	nodeInfo.appendChild(textnode);      
+	nodeInfo.style.float = "center";
+
+	var node  = document.createElement('pre');
+
+	if(imgSrc != ""){
+		node.appendChild(imageNode);
+	}
+	node.appendChild(nodeInfo);
+//	node.appendChild(textnode);
+
 	document.getElementById("directions").appendChild(node);
 
 	return false;

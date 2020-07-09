@@ -14,9 +14,9 @@
 	<style>
 		/* Set the size of the div element that contains the map */
 		#map {
-		  height: 72vh; /*600px;*/  /* The height is 400 pixels */
-		  width : 74vw; /*750px;*/  /* The width is the width of the web page */
-		 }
+			height:  75vh;
+			width :  74vw;
+		}
 
 		div.directions {
 		  background-color: white;
@@ -49,15 +49,34 @@
 			cursor: pointer;
 		}
 
+		img.logoHeader {
+			position: relative;
+			right: 2%;
+			width: 8%;
+			height: 8%;		
+			min-width:100px;
+			min-height:100px;
+		}
+
+		
+		.jumbotron {
+		  padding-top: 1px !important;
+		  padding-bottom: 1px !important;
+		}
+
+/*	.directionsIm, .directionsText { display:inline }*/
 
 	</style>
 
 </head>
 <body onload="googleMapCallback();">
 
-<div class="jumbotron text-center">
-  <h1>Multimodal Route Planner</h1>
-  <p>Plan your trip in Western Greece and Puglia!</p> 
+<div class="jumbotron text-center" style="background-color:#034200;" >
+	<h1 style="color:#FFF">
+		<img src="./img/ic_logo_teliko-web.png" alt="logo" class="logoHeader" />
+				Multimodal Route Planner
+		<h4 text-align:right; style="color:#FFF">Plan your trip in Western Greece and Puglia!</h3> 
+	</h1>
 </div>
 
 
@@ -67,10 +86,10 @@
     <div class="col-sm-3">
 				<! buttons>
 				<div class="btn-group btn-group-lg">
-					<button id='trainButton' type="button" class="btn btn-primary ">Public</button>
-					<button id='walkButton' type="button" class="btn btn-primary ">Walk</button>
-					<button id='carButton' type="button" class="btn btn-primary ">Car</button>
-					<button id='hybridButton' type="button" class="btn btn-primary " data-toggle="modal" data-target="#buttonCheckModal">Hybrid</button>
+					<button id='trainButton' type="button" class="btn btn-primary " style="background-color:#034200;"><img src="./img/rail.png" alt='Public' width="40px" height="40px"></button>
+					<button id='walkButton' type="button" class="btn btn-primary " style="background-color:#d8d8d8;"><img src="./img/car.png" alt='Walk' width="40px" height="40px"></button>
+					<button id='carButton' type="button" class="btn btn-primary " style="background-color:#d8d8d8;"><img src="./img/walk.png" alt='Car' width="40px" height="40px"></button>
+					<button id='hybridButton' type="button" class="btn btn-primary " data-toggle="modal" data-target="#buttonCheckModal" style="background-color:#d8d8d8;"> <img src="./img/pubcar.png" alt='Hybrid' width="40px" height="40px"></button>
 				</div>
 
 				<!-- Modal -->
@@ -163,7 +182,7 @@
 			</div>
 
 
-			<div class="col-sm-12" style="height=75vh;width=75wv;"><div class="directions" id="directions" ></div></div>
+			<div class="col-sm-12" ><div class="directions" id="directions" ></div></div>
 
 
     </div>
