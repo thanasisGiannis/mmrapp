@@ -40,6 +40,14 @@ function changeRoute(routeNum){
 
 }
 
+function resetButtonColor(){
+document.getElementById("trainButton").style.backgroundColor="#d8d8d8";
+document.getElementById("walkButton").style.backgroundColor="#d8d8d8";
+document.getElementById("carButton").style.backgroundColor="#d8d8d8";
+document.getElementById("hybridButton").style.backgroundColor="#d8d8d8";
+
+return false;
+}
 
 
 function updateMod(modButton){
@@ -70,8 +78,11 @@ function setDefault(){
 
 //	ts = 1573737192;
 	te;//   = ts + 10000000;//1573737192;
-//	mod  = 'pub'; // koumpia
-	mod  = 'car'; // koumpia
+	mod  = 'pub'; // koumpia
+	document.getElementById("trainButton").style.backgroundColor="#034200";
+
+//	mod  = 'car'; // koumpia
+//	document.getElementById("carButton").style.backgroundColor="#034200";
 
 	obj  = 'multi';
 	skip;// = ['tram']; // checkbox
@@ -251,6 +262,69 @@ function dPointSetMenu(){
 // Initialize Map
 function initMap() {
 
+/* OpenStreet Map */
+
+/*
+	var localmap = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: {lat: 38.246639, lng: 21.734573},
+          mapTypeId: "OSM"
+        });
+
+
+	localmap.mapTypes.set("OSM", new google.maps.ImageMapType({
+                getTileUrl: function(coord, zoom) {
+                    // See above example if you need smooth wrapping at 180th meridian
+                    return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+                },
+                tileSize: new google.maps.Size(256, 256),
+                name: "OpenStreetMap",
+                maxZoom: 18
+            }));
+
+	map = localmap;
+
+
+	map.addListener('rightclick', function(e) {
+
+
+		contextLatLng = e.latLng;
+	
+		var menuBox = document.getElementById("contextGoogleMapsMenu");
+		var localmap = document.getElementById("map");		
+		//menuBox.style.left = left + "px";
+		//menuBox.style.top  = top + "px";
+		var leftS = localmap.getBoundingClientRect().left + e.pixel.x;
+		var topS  = localmap.getBoundingClientRect().top  + e.pixel.y;
+		
+		menuBox.style.left = leftS + "px";
+		menuBox.style.top  = topS  + "px";
+
+	
+		menuBox.style.display = "block";
+		contextMenuDisplayed = true;
+ 
+	});
+
+
+
+	map.addListener("click", function (e)
+	{
+		if (contextMenuDisplayed == true)
+	 	{
+	  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
+			 menuBox.style.display = "none";
+		}
+	});
+
+
+
+
+
+
+return false;
+*/
+/* Google Map */
 	var localmap = new google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {lat: 38.246639, lng: 21.734573},
@@ -607,8 +681,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 	imageNode.style.width  = "4vw";
 	imageNode.style.float = "left";
 
-	
-
 
 	var textnode = document.createTextNode(outputMessage);
 
@@ -645,6 +717,7 @@ function queryRoute(){
 						+"&"+"obj="+obj
 						+"&"+"skip="+skip;
 
+	
 
 	var mmrappReq = Url + '?' + inputHttp;
 	var Httpreq = new XMLHttpRequest(); // a new request
@@ -656,6 +729,18 @@ function queryRoute(){
 	var success = jsonRoutes.header.success;
 	
 	if (success==0){
+
+/*
+		if(contextMenuSpoint!=undefined){
+			contextMenuSpoint.setMap(null);
+			contextMenuSpoint=undefined;
+		}
+
+		if(contextMenupDoint!=undefined){
+			contextMenupDoint.setMap(null);
+			contextMenuDpoint=undefined;
+		}
+*/
 		alert('No route');
 		return false;
 	}
