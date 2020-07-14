@@ -12,71 +12,15 @@
 	 <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I&libraries=places"></script>
     <script src="./googlemap.js"></script>
-	<style>
-		/* Set the size of the div element that contains the map */
-		#map {
-			height:  75vh;
-			width :  74vw;
-		}
-
-		div.directions {
-		  background-color: white;
-		  width: inherit;
-		  max-height: 56.5vh;
-		  overflow-y:auto;
-		}
-
-
-
-
-		.menu {
-			width: 150px;
-			box-shadow: 3px 3px 5px #888888;
-			border-style: solid;
-			border-width: 1px;
-			border-color: grey;
-			border-radius: 2px;
-			position: fixed;
-			display: none;
-		}
-
-		.menu-item {
-			height: 20px;
-			background-color: white;
-		}
-
-		.menu-item:hover {
-			background-color: #6CB5FF;
-			cursor: pointer;
-		}
-
-		img.logoHeader {
-			position: relative;
-			right: 2%;
-			width: 8%;
-			height: 8%;		
-			min-width:100px;
-			min-height:100px;
-		}
-
-		
-		.jumbotron {
-		  padding-top: 1px !important;
-		  padding-bottom: 1px !important;
-		}
-
-/*	.directionsIm, .directionsText { display:inline }*/
-
-	</style>
-
+	 <link rel="stylesheet" href="index.css"> 
 </head>
-<body onload="googleMapCallback();">
+<body onload="googleMapCallback();" id="main">
 
 <div class="jumbotron text-center" style="background-color:#034200;" >
 	<h1 style="color:#FFF">
 		<img src="./img/ic_logo_teliko-web.png" alt="logo" class="logoHeader" />
 				Multimodal Route Planner
-		<h4 text-align:right; style="color:#FFF">Plan your trip in Western Greece and Puglia!</h3> 
+		<h4 text-align:right; style="color:#FFF">Plan your trip in Western Greece and Puglia! (Under Construction)  </h4> 
 	</h1>
 </div>
 
@@ -90,9 +34,14 @@
 					<button id='trainButton' type="button" class="btn btn-primary " style="background-color:#d8d8d8;"><img src="./img/rail.png" alt='Public' width="40px" height="40px"></button>
 					<button id='walkButton' type="button" class="btn btn-primary " style="background-color:#d8d8d8;"><img src="./img/walk.png" alt='Walk' width="40px" height="40px"></button>
 					<button id='carButton' type="button" class="btn btn-primary " style="background-color:#d8d8d8;"><img src="./img/car.png" alt='Car' width="40px" height="40px"></button>
-					<button id='hybridButton' type="button" class="btn btn-primary " data-toggle="modal" data-target="#buttonCheckModal" style="background-color:#d8d8d8;"> <img src="./img/pubcar.png" alt='Hybrid' width="40px" height="40px"></button>
-				</div>
+					<button   id='hybridButton' type="button" class="btn btn-primary " data-toggle="modal"
+								 data-target="#buttonCheckModal" style="background-color:#d8d8d8;">
+								 <img src="./img/pubcar.png" alt='Hybrid' width="40px" height="40px">
+					</button>
 
+					<span style="font-size:45px;cursor:pointer" onclick="openNav()">&#9776;</span>
+				</div>
+	
 				<!-- Modal -->
 				  <div class="modal fade"  id="buttonCheckModal" role="dialog">
 					 <div class="modal-dialog">
@@ -161,13 +110,14 @@
 												$('#buttonCheckModal').modal('hide');
 												return false;
 											};
+
 				</script>
 
 			
 
 
 				<! form>
-				<form id="searchForm">
+				<form id="searchForm" style="padding-top:1vh;">
 					<div class="form-group">
 						<input id="spoint" type="text" class="form-control" placeholder="Starting point" >
 					</div>
@@ -207,6 +157,82 @@
             <div class="menu-item" onclick="sPointSetMenu()">From here</div>
             <div class="menu-item" onclick="dPointSetMenu()">Towards here</div>
    </div>
+
+
+<! Extra query settings sideNav>
+				<div id="settingsSideNav" class="overlay">
+				  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+						<div class="container" style="align=center;background-color:#FFF; align-content: center;">
+						<h2>Transport Preferences</h2>
+						<form>
+						  <input checked type="checkbox" id="vehicle1" name="vehicle1" value="bus">
+						  <label for="bus">Bus</label><br>
+						  <input checked type="checkbox" id="vehicle2" name="vehicle2" value="subway">
+						  <label for="subway">Subway</label><br>
+						  <input checked type="checkbox" id="vehicle3" name="vehicle3" value="train">
+						  <label for="train">Train</label><br>
+						  <input checked type="checkbox" id="vehicle4" name="vehicle4" value="tram">
+						  <label for="tram">Tram</label><br>
+						  <input checked type="checkbox" id="vehicle5" name="vehicle5" value="trolley">
+						  <label for="trolley">Trolley</label><br>
+						  <input checked type="checkbox" id="vehicle6" name="vehicle6" value="Boat">
+						  <label for="Boat">Boat</label><br>
+						</form>
+						</div>
+
+						<div class="container" style="padding-top:5vh;align=center;background-color:#FFF; align-content: center;">
+							<h2 id="headMaxWalkTime">Μaximum walking time: 30min</h2>
+							<form id="fromSlider">
+								<input type="range" min="0" max="60" value="30" step="5" class="slider" id="maxWalkTime" name="maxWalkTime" data-toggle="tooltip" title="">
+							</form>
+						</div>
+	
+						<script>
+						document.getElementById("maxWalkTime").onchange=function(){
+							var maxWT = document.getElementById("maxWalkTime");
+							maxWT.title= maxWT.value;
+							var headerMaxWT = document.getElementById("headMaxWalkTime");
+							headerMaxWT.innerHTML = "Μaximum walking time: "+ maxWT.value + "min";
+						}
+						</script>
+						
+						<div class="container" style="padding-top:5vh;background-color:#FFF; align-content: center;">
+						<h2>Departure</h2>
+						<form>
+							<label for="dateD">Date:</label>
+							<input type="date" id="dateD" name="dateD"
+									 min="2018-01-01" max="2100-12-31">
+
+							<label for="timeD">Time:</label>
+							<input type="time" id="timeD" name="timeD">
+
+						</form>
+						</div>
+
+
+						<div class="container" style="padding-top:2vh;background-color:#FFF; align-content: center;">
+						<h2>Arrival</h2>
+						<form>
+							<label for="dateA">Date:</label>
+							<input type="date" id="dateA" name="dateA"
+									 min="2018-01-01" max="2100-12-31">
+
+							<label for="timeA">Time:</label>
+							<input type="time" id="timeA" name="timeA">
+
+						</form>
+						</div>
+			 			
+
+
+						<div  class="container" style="padding-top:2vh;background-color:#FFF; align-content: center;">
+							<form>
+							  <input style="align:center;" type="button" value="Submit" id='settingsNavSubmit' class="btn btn-default">
+							</form>
+					  </div>
+
+				</div>
 
 
 </body>

@@ -1,6 +1,6 @@
 
 // Initialize and add the map
-var map;
+var localmap;
 
 // Global Variables for accessing data
 // default dummy values
@@ -76,13 +76,8 @@ function setDefault(){
   	var ms = d.getTime();	
 	ts = Math.round(ms/1000); // round to nearest second
 
-//	ts = 1573737192;
-	te;//   = ts + 10000000;//1573737192;
 	mod  = 'pub'; // koumpia
 	document.getElementById("trainButton").style.backgroundColor="#034200";
-
-//	mod  = 'car'; // koumpia
-//	document.getElementById("carButton").style.backgroundColor="#034200";
 
 	obj  = 'multi';
 	skip;// = ['tram']; // checkbox
@@ -128,7 +123,7 @@ function myPositionInMap(position) {
 	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
 	var markerS = new google.maps.Marker({
 			 position: route[0],
-			 map: map,
+			 map: localmap,
 			title: messageS
 		 });
 
@@ -165,9 +160,11 @@ function sPointSetMenu(){
 	var latLng = contextLatLng.toString(); 
 	latLng = latLng.replace('(','');
 	latLng = latLng.replace(')','');
+	
+	var dest = latLng;
 
 	latLng = latLng.split(",");
-	console.log(latLng);
+	console.log("sending to google: " + latLng);
 
 	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
 
@@ -176,7 +173,7 @@ function sPointSetMenu(){
 	HttpreqGoogleS.send();
 	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
 
-	console.log(HttpreqGoogleS.responseText);
+	//console.log(HttpreqGoogleS.responseText);
 
 	if(contextMenuSpoint!=undefined){
 		contextMenuSpoint.setMap(null);
@@ -185,7 +182,7 @@ function sPointSetMenu(){
 	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
 	var markerS = new google.maps.Marker({
 			 position: contextLatLng,
-			 map: map,
+			 map: localmap,
 			title: messageS
 		 });
 
@@ -194,10 +191,26 @@ function sPointSetMenu(){
 	contextMenuSpoint=markerS;
 
 	document.getElementById("spoint").value=messageS;
+//document.getElementById("spoint").value=dest;
 	document.getElementById("spoint").placeholder=messageS;
+//document.getElementById("spoint").placeholder=dest;
 
+	console.log("Before spoint: "+latLng);
+
+//   document.getElementById("spoint").value=latLng;
+//	document.getElementById("spoint").placeholder=latLng;
+
+	console.log("spoint: " +  document.getElementById("spoint").value);
+	//console.log('messageS: ' + messageS);
+	latLng[0].replace(" ","");
+	latLng[1].replace(" ","");
+
+	slat = Number(latLng[0]);
+	slon = Number(latLng[1]);
+		
 	if(pointDinMap == true){
 		updateRoute(spoint,epoint);
+		//updateRouteFromContextMenu(slat,slon,dlat,dlon);
 		pointSinMap = true;
 	}else{
 		pointSinMap = true;
@@ -217,9 +230,11 @@ function dPointSetMenu(){
 	var latLng = contextLatLng.toString(); 
 	latLng = latLng.replace('(','');
 	latLng = latLng.replace(')','');
+	
+	var dest = latLng;
 
 	latLng = latLng.split(",");
-	console.log(latLng);
+	//console.log(latLng);
 
 	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
 
@@ -228,7 +243,7 @@ function dPointSetMenu(){
 	HttpreqGoogleS.send();
 	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
 
-	console.log(HttpreqGoogleS.responseText);
+	//console.log(HttpreqGoogleS.responseText);
 
 	if(contextMenuDpoint!=undefined){
 		contextMenuDpoint.setMap(null);
@@ -238,17 +253,29 @@ function dPointSetMenu(){
 	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
 	var markerS = new google.maps.Marker({
 			 position: contextLatLng,
-			 map: map,
+			 map: localmap,
 			title: messageS
 		 });
 
 	globalMarkerMap.push(markerS);
 	contextMenuDpoint=markerS;
 
+	//console.log('messageS: ' + messageS);
 	document.getElementById("epoint").value=messageS;
+//	document.getElementById("epoint").value=dest;
 	document.getElementById("epoint").placeholder=messageS;
+//	document.getElementById("epoint").placeholder=dest;
 
+//   document.getElementById("epoint").value=latLng;
+//	document.getElementById("epoint").placeholder=latLng;
+
+	latLng[0].replace(" ","");
+	latLng[1].replace(" ","");
+	dlat = Number(latLng[0]);
+	dlon = Number(latLng[1]);
 	if(pointSinMap == true){
+		console.log(latLng);
+//		updateRouteFromContextMenu(slat,slon,dlat,dlon);
 		updateRoute(spoint,epoint);
 		pointDinMap = true;
 	}else{
@@ -325,26 +352,27 @@ function initMap() {
 return false;
 */
 /* Google Map */
-	var localmap = new google.maps.Map(document.getElementById('map'), {
+	//var
+   localmap = new google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {lat: 38.246639, lng: 21.734573},
-          mapTypeId: 'terrain'
+          mapTypeId: 'roadmap'//'terrain'
         });
 
-	map = localmap;
+	//map = localmap;
 
 
-	map.addListener('rightclick', function(e) {
+	localmap.addListener('rightclick', function(e) {
 
 
 		contextLatLng = e.latLng;
 	
 		var menuBox = document.getElementById("contextGoogleMapsMenu");
-		var localmap = document.getElementById("map");		
+		var localmap_ = document.getElementById("map");		
 		//menuBox.style.left = left + "px";
 		//menuBox.style.top  = top + "px";
-		var leftS = localmap.getBoundingClientRect().left + e.pixel.x;
-		var topS  = localmap.getBoundingClientRect().top  + e.pixel.y;
+		var leftS = localmap_.getBoundingClientRect().left + e.pixel.x;
+		var topS  = localmap_.getBoundingClientRect().top  + e.pixel.y;
 		
 		menuBox.style.left = leftS + "px";
 		menuBox.style.top  = topS  + "px";
@@ -357,7 +385,7 @@ return false;
 
 
 
-	map.addListener("click", function (e)
+	localmap.addListener("click", function (e)
 	{
 		if (contextMenuDisplayed == true)
 	 	{
@@ -421,6 +449,21 @@ function fillInAddress() {
 
 
 // Do the search query to backend
+
+
+function updateRouteFromContextMenu(slat_,slon_,dlat_,dlon_){
+
+	slat = slat_;
+	slon = slon_;
+
+	dlat = dlat_;
+	dlon = dlon_;
+
+	queryRoute();
+	return false;
+}
+
+
 function updateRoute(spoint,epoint){
 
 	if (spoint.value == '' || epoint.value==''){
@@ -446,13 +489,13 @@ function updateRoute(spoint,epoint){
 	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
 	var jsonEpoint = JSON.parse(HttpreqGoogleE.responseText);
 	
-
 	slat = jsonSpoint.results[0].geometry.location.lat;
+	console.log("FROM UPDATEROUTE " + slat);
 	slon = jsonSpoint.results[0].geometry.location.lng;
 
 	dlat = jsonEpoint.results[0].geometry.location.lat;
 	dlon = jsonEpoint.results[0].geometry.location.lng;
-	
+
 	queryRoute();
 	return false;
 }
@@ -538,7 +581,7 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 
 		var markerS = new google.maps.Marker({
 			 position: route[0],
-			 map: map,
+			 map: localmap,
 			title: messageS
 		  });
 
@@ -547,16 +590,16 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 
 		var markerE = new google.maps.Marker({
 			 position: route[route.length-1],
-			 map: map,
+			 map: localmap,
 			 title: messageE
 		  });
-		markerS.setMap(map);
-		markerE.setMap(map);
+		markerS.setMap(localmap);
+		markerE.setMap(localmap);
 		globalMarkerMap.push(markerS);
 		globalMarkerMap.push(markerE);
 	}
 
-	polyMap.setMap(map);
+	polyMap.setMap(localmap);
 
 	globalPolyMap.push(polyMap);
 
@@ -704,6 +747,8 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 function queryRoute(){
 
+	console.log("To Backend " + slat + " " + dlat);
+
 	var Url = 'http://150.140.143.218:8000/getJourneys/';
 	
 	var inputHttp =      "lg="+lg
@@ -754,7 +799,7 @@ function queryRoute(){
 	
 	/* Clear Map from Markers*/
 	numIter = globalMarkerMap.length;
-	console.log(numIter);
+	//console.log(numIter);
 	for(var i=0;i<numIter;i++){
 		globalMarkerMap[i].setMap(null);
 	}
@@ -913,8 +958,12 @@ function queryRoute(){
 	var clat = Math.abs(slat+dlat)/2;
 	var clon = Math.abs(slon+dlon)/2;
 
-	map.setCenter(new google.maps.LatLng(clat, clon));
-	map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+	console.log("clat: " + clat + " clon: " + clon);
+	console.log("slat: " + slat + " slon: " + slon);
+	console.log("dlat: " + dlat + " dlon: " + dlon);
+
+	localmap.setCenter(new google.maps.LatLng(clat, clon));
+	//localmap.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 	
 	/* map zooming to fit spoint and dpoint */
 
@@ -974,8 +1023,17 @@ function queryRoute(){
 	for (var i = 0; i < latlngb.length; i++) {
 		 latlngbounds.extend(latlngb[i]);
 	}
-	map.fitBounds(latlngbounds);
+	localmap.fitBounds(latlngbounds);
 
 	return false;	
+}
+
+
+function openNav() {
+	document.getElementById("settingsSideNav").style.width = "100%";
+}
+
+function closeNav() {
+	document.getElementById("settingsSideNav").style.width = "0%";
 }
 
