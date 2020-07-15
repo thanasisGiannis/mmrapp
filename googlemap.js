@@ -4,7 +4,7 @@ var localmap;
 
 // Global Variables for accessing data
 // default dummy values
-var lg   = 'en';
+var lg;//   = 'en';
 var slat;// = 38.2466036;
 var slon;// = 21.7361790;
 
@@ -13,10 +13,10 @@ var dlon;// = 21.7361404;
 
 var contextLatLng;
 
-var ts   = 1592487000;// 1592235600;
-var te   ;//= ts + 10000000;//1573737192;
-var mod  = 'pub'; // koumpia
-var obj  = 'multi';
+var ts;//   = 1592487000;// 1592235600;
+var te;   //= ts + 10000000;//1573737192;
+var mod;//  = 'pub'; // koumpia
+var obj;//  = 'multi';
 var skip ;//= ['bus'];//x=  ['tram'];//['bus']; // checkbox
 var globalPolyMap=[];
 var globalMarkerMap=[];
@@ -30,7 +30,7 @@ var contextMenuDpoint = undefined;
 //var pointsInMap = 0;
 var pointSinMap = false;
 var pointDinMap = false;
-
+var total_walk_travel_time=0; // total walking time in a route
 function changeRoute(routeNum){
 //	alert(routeNum.value);
 
@@ -72,19 +72,149 @@ function setDefault(){
 
 
 
+
+   /*    Default button     */
+	/* --------------------- */
+	mod  = 'pub'; // koumpia
+	document.getElementById("trainButton").style.backgroundColor="#034200";
+	/* --------------------- */
+
+
+
+	/* settings date default */
+	/* --------------------- */
 	var d = new Date();
   	var ms = d.getTime();	
 	ts = Math.round(ms/1000); // round to nearest second
 
-	mod  = 'pub'; // koumpia
-	document.getElementById("trainButton").style.backgroundColor="#034200";
+	var month = d.getMonth();
+	if (month < 10){
+		month = "0"+month;
+	}
 
+	var day = d.getDate();
+	if (day < 10){
+		day = "0"+day;
+	}
+
+	document.getElementById("timeD").value = ""+toDate(ts)+"";
+	document.getElementById("dateD").value = d.getFullYear() +"-"+month+"-"+day;
+
+	document.getElementById("timeA").value = "";
+	document.getElementById("dateA").value = "";
+	/* --------------------- */
+
+
+
+	/* settings 3 routes asked default */
+	/* ------------------------------- */
 	obj  = 'multi';
-	skip;// = ['tram']; // checkbox
+	/* ------------------------------- */
+
+	/* settings language */
+	/* ----------------- */
+	lg  = 'en';
+	/* ----------------- */
+
+
+	/* settings checkbox default */
+	/* ------------------------- */
+	document.getElementById("vehicleBus").checked = true;
+	document.getElementById("vehicleSubway").checked = true;
+	document.getElementById("vehicleTrain").checked = true;
+	document.getElementById("vehicleTram").checked = true;
+	document.getElementById("vehicleTrolley").checked = true;
+	document.getElementById("vehicleBoat").checked = true;
+	/* ------------------------- */
+
+
+
+	/* settings checkbox default */
+	/* ------------------------- */
+	document.getElementById("maxWalkTime").value="30";
+	document.getElementById("headMaxWalkTime").innerHTML = "Μaximum walking time: "+document.getElementById("maxWalkTime").value + "min";
+	/* ------------------------- */
+
 
 	return false;
 }
 
+
+function updateSettings(){
+
+
+
+	/* settings date default */
+	/* --------------------- */
+	var timeD = document.getElementById("timeD").value;
+	var dateD = document.getElementById("dateD").value;
+
+	if(timeD!="" && dateD!=""){
+			var hD = timeD.slice(0, 2); // hours
+			var minD = timeD.slice(3, 5); // minutes
+
+			var yD = dateD.slice(0, 4); // year
+			var monthD = dateD.slice(5, 7); // month
+			var dayD = dateD.slice(8, 10); // day
+
+			var fullDateD = new Date(yD, monthD, dayD, hD, minD, "0","0");
+			console.log("ts-: " + ts);
+			ts = fullDateD.getTime() / 1000;
+			console.log("ts+: " + ts);
+	}
+
+	var timeA = document.getElementById("timeA").value;
+	var dateA = document.getElementById("dateA").value;
+
+	if(timeA!="" && dateA!=""){
+			var hA = timeA.slice(0, 2); // hours
+			var minA = timeA.slice(3, 5); // minutes
+
+			var yA = dateA.slice(0, 4); // year
+			var monthA = dateA.slice(5, 7); // month
+			var dayA = dateA.slice(8, 10); // day
+			console.log("te-: " + te);
+			te = fullDateD.getTime() / 1000;
+			console.log("te-: " + te);
+	}
+	/* --------------------- */
+
+
+	/* settings checkbox default */
+	/* ------------------------- */
+	skip = [];
+	if(document.getElementById("vehicleBus").checked == false){
+		skip.push('bus');
+		console.log('bus unckecked');
+	}
+	if(document.getElementById("vehicleSubway").checked == false){
+		skip.push('subway');
+	}
+	if(document.getElementById("vehicleTrain").checked == false){
+		skip.push('train');
+	}
+	if(document.getElementById("vehicleTram").checked == false){
+		skip.push('tram');
+	}
+	if(document.getElementById("vehicleTrolley").checked == false){
+		skip.push('trolley');
+	}
+	if(document.getElementById("vehicleBoat").checked == false){
+		skip.push('boat');
+	}
+	/* ------------------------- */
+
+
+
+	/* settings checkbox default */
+	/* ------------------------- */
+	//document.getElementById("maxWalkTime").value="30";
+	//document.getElementById("headMaxWalkTime").innerHTML = "Μaximum walking time: "+document.getElementById("maxWalkTime").value + "min";
+	/* ------------------------- */
+
+	queryRoute();
+	return false;
+}
 
 
 
@@ -517,7 +647,7 @@ function toDate(unix_timestamp){
 	var seconds = "0" + date.getSeconds();
 
 	// Will display time in 10:30:23 format
-	var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+	var formattedTime = hours + ':' + minutes.substr(-2);// + ':' + seconds.substr(-2);
 
 	return formattedTime;
 }
@@ -650,11 +780,20 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 		distance = distance.toFixed(1) + "km";
 		//alert( desc + distance+ travel_time+ walk_time);
 		var testing = false;
+		var imageNode = document.createElement('img');
 		if (!testing && type === "walk"){
 			outputMessage = "Walk to "+streetE +
 										 "\nDept. Time: "+leaveTime+ 
 										 "\nTravel Time: "+ outputwalk_time + 
 										 "\nDistance: "+distance;
+
+			/*
+			var maxWalkTime = document.getElementById("maxWalkTime").value;
+			maxWalkTime = maxWalkTime*60;
+			if(maxWalkTime < total_walk_travel_time){
+				imageNode.style.backgroundColor = "red";
+			}
+			*/
 			imgSrc = './img/walk3ar.png';
 		}else if ( !testing &&  type === "bus" ){
 			//var desc = "Dromologio Tade";
@@ -718,7 +857,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 
 
-	var imageNode = document.createElement('img');
 	imageNode.src  = imgSrc;
 	imageNode.style.height = "9vh";
 	imageNode.style.width  = "4vw";
@@ -854,6 +992,20 @@ function queryRoute(){
 	var totalDistanceTravel = jsonRoutes.routes[j].distance;
 	//alert(totalTimeTravel);
 	addDirections("total","","","","","","","", totalDistanceTravel, totalTimeTravel, "");
+
+	/* find total walking time of the route */
+	total_walk_travel_time=0;
+	for(var i=0; i<numIter; i++){
+		var type  = jsonRoutes.routes[j].legs[i].type;
+		var travel_time = jsonRoutes.routes[j].legs[i].travel_time;
+	
+		if(type == "walk"){
+			total_walk_travel_time += travel_time;
+			console.log('Total walk travel time: ' + total_walk_travel_time);
+		}		
+
+
+	}
 	for(var i=0; i<numIter; i++){
 		var route = jsonRoutes.routes[j].legs[i].coordinates;
 		var type  = jsonRoutes.routes[j].legs[i].type;

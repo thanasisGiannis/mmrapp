@@ -163,26 +163,26 @@
 				<div id="settingsSideNav" class="overlay">
 				  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-						<div class="container" style="align=center;background-color:#FFF; align-content: center;">
+						<div class="container" style="padding-top=3vh;align=center;background-color:#FFF; align-content: center;">
 						<h2>Transport Preferences</h2>
 						<form>
-						  <input checked type="checkbox" id="vehicle1" name="vehicle1" value="bus">
+						  <input checked type="checkbox" id="vehicleBus" name="vehicleBus" value="bus">
 						  <label for="bus">Bus</label><br>
-						  <input checked type="checkbox" id="vehicle2" name="vehicle2" value="subway">
+						  <input checked type="checkbox" id="vehicleSubway" name="vehicleSubway" value="subway">
 						  <label for="subway">Subway</label><br>
-						  <input checked type="checkbox" id="vehicle3" name="vehicle3" value="train">
+						  <input checked type="checkbox" id="vehicleTrain" name="vehicleTrain" value="train">
 						  <label for="train">Train</label><br>
-						  <input checked type="checkbox" id="vehicle4" name="vehicle4" value="tram">
+						  <input checked type="checkbox" id="vehicleTram" name="vehicleTram" value="tram">
 						  <label for="tram">Tram</label><br>
-						  <input checked type="checkbox" id="vehicle5" name="vehicle5" value="trolley">
+						  <input checked type="checkbox" id="vehicleTrolley" name="vehicleTrolley" value="trolley">
 						  <label for="trolley">Trolley</label><br>
-						  <input checked type="checkbox" id="vehicle6" name="vehicle6" value="Boat">
+						  <input checked type="checkbox" id="vehicleBoat" name="vehicleBoat" value="Boat">
 						  <label for="Boat">Boat</label><br>
 						</form>
 						</div>
 
-						<div class="container" style="padding-top:5vh;align=center;background-color:#FFF; align-content: center;">
-							<h2 id="headMaxWalkTime">Μaximum walking time: 30min</h2>
+						<div class="container" style="padding-top=3vh;align=center;background-color:#FFF; align-content: center;">
+							<h2 id="headMaxWalkTime"></h2>
 							<form id="fromSlider">
 								<input type="range" min="0" max="60" value="30" step="5" class="slider" id="maxWalkTime" name="maxWalkTime" data-toggle="tooltip" title="">
 							</form>
@@ -197,12 +197,12 @@
 						}
 						</script>
 						
-						<div class="container" style="padding-top:5vh;background-color:#FFF; align-content: center;">
+						<div class="container" style="padding-top=3vh;background-color:#FFF; align-content: center;">
 						<h2>Departure</h2>
 						<form>
 							<label for="dateD">Date:</label>
 							<input type="date" id="dateD" name="dateD"
-									 min="2018-01-01" max="2100-12-31">
+									 min="2018-01-01" value="2020-02-001" max="2100-12-31">
 
 							<label for="timeD">Time:</label>
 							<input type="time" id="timeD" name="timeD">
@@ -211,7 +211,7 @@
 						</div>
 
 
-						<div class="container" style="padding-top:2vh;background-color:#FFF; align-content: center;">
+						<div class="container" style="padding-top=2vh;background-color:#FFF; align-content: center;">
 						<h2>Arrival</h2>
 						<form>
 							<label for="dateA">Date:</label>
@@ -227,9 +227,9 @@
 
 
 						<div  class="container" style="padding-top:2vh;background-color:#FFF; align-content: center;">
-							<form>
-							  <input style="align:center;" type="button" value="Submit" id='settingsNavSubmit' class="btn btn-default">
-							</form>
+							<!form onsubmit="updateSettings()">
+							  <button type="submit" onclick="closeNav();updateSettings()" id='settingsNavSubmit' class="btn btn-default">Submit</button>
+							<!/form>
 					  </div>
 
 				</div>
