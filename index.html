@@ -189,14 +189,25 @@
 						</div>
 	
 						<script>
-						document.getElementById("maxWalkTime").onchange=function(){
 							var maxWT = document.getElementById("maxWalkTime");
+						document.getElementById("maxWalkTime").onchange=function(){
 							maxWT.title= maxWT.value;
 							var headerMaxWT = document.getElementById("headMaxWalkTime");
 							headerMaxWT.innerHTML = "Μaximum walking time: "+ maxWT.value + "min";
 						}
 						</script>
 						
+
+						<div class="container" style="padding-top=3vh;align=center;background-color:#FFF; align-content: center;">
+						<h2>Routes</h2>
+						<form id="buttonCheckBox">
+						  <input checked type='radio' class='radio-button' name="routesCheckBox" value="eaCheckBox" id="eaCheckBox">
+						  <label for="eaChecked">Earliest Arrival</label><br>
+						  <input type='radio' class='radio-button' name="routesCheckBox" value="ldCheckBox" id="ldCheckBox">
+						  <label for="ldChecked">Latest Departure</label><br>
+						</form>
+						</div>
+
 						<div class="container" style="padding-top=3vh;background-color:#FFF; align-content: center;">
 						<h2>Departure</h2>
 						<form>

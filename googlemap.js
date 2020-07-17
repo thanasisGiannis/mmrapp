@@ -108,6 +108,7 @@ function setDefault(){
 
 	/* settings 3 routes asked default */
 	/* ------------------------------- */
+	//obj  = 'ea';
 	obj  = 'multi';
 	/* ------------------------------- */
 
@@ -180,8 +181,8 @@ function updateSettings(){
 	/* --------------------- */
 
 
-	/* settings checkbox default */
-	/* ------------------------- */
+	/* settings vehicle checkbox default */
+	/* --------------------------------- */
 	skip = [];
 	if(document.getElementById("vehicleBus").checked == false){
 		skip.push('bus');
@@ -202,9 +203,24 @@ function updateSettings(){
 	if(document.getElementById("vehicleBoat").checked == false){
 		skip.push('boat');
 	}
-	/* ------------------------- */
+	/* --------------------------------- */
 
 
+
+	/* settings routes checkbox default */
+	/* -------------------------------- */
+
+	var eaObj =  document.getElementById("eaCheckBox");
+	var ldObj =  document.getElementById("ldCheckBox");
+
+
+	if(eaObj.checked == true){
+		obj  = 'ea'; 
+	}
+	if(ldObj.checked == true){
+		obj  = 'ld';
+	}
+	/* -------------------------------- */
 
 	/* settings checkbox default */
 	/* ------------------------- */
@@ -421,8 +437,7 @@ function initMap() {
 
 /* OpenStreet Map */
 
-/*
-	var localmap = new google.maps.Map(document.getElementById('map'), {
+	localmap = new google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {lat: 38.246639, lng: 21.734573},
           mapTypeId: "OSM"
@@ -432,17 +447,17 @@ function initMap() {
 	localmap.mapTypes.set("OSM", new google.maps.ImageMapType({
                 getTileUrl: function(coord, zoom) {
                     // See above example if you need smooth wrapping at 180th meridian
-                    return "https://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+                    return "http://mmrp.interreginvestment.eu/pegasus/map/tiles/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
                 },
                 tileSize: new google.maps.Size(256, 256),
                 name: "OpenStreetMap",
                 maxZoom: 18
             }));
 
-	map = localmap;
+	//map = localmap;
 
 
-	map.addListener('rightclick', function(e) {
+	localmap.addListener('rightclick', function(e) {
 
 
 		contextLatLng = e.latLng;
@@ -465,7 +480,7 @@ function initMap() {
 
 
 
-	map.addListener("click", function (e)
+	localmap.addListener("click", function (e)
 	{
 		if (contextMenuDisplayed == true)
 	 	{
@@ -480,7 +495,7 @@ function initMap() {
 
 
 return false;
-*/
+
 /* Google Map */
 	//var
    localmap = new google.maps.Map(document.getElementById('map'), {
@@ -903,6 +918,7 @@ function queryRoute(){
 	
 
 	var mmrappReq = Url + '?' + inputHttp;
+
 	var Httpreq = new XMLHttpRequest(); // a new request
 	Httpreq.open("GET",mmrappReq,false);
 	Httpreq.send();
