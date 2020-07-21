@@ -24,6 +24,7 @@ var globalMarkerMap=[];
 var lineExists = 0;
 var mainRoute=0;
 var contextMenuDisplayed = false;
+var queryLeg;
 
 var contextMenuSpoint = undefined;
 var contextMenuDpoint = undefined;
@@ -108,8 +109,8 @@ function setDefault(){
 
 	/* settings 3 routes asked default */
 	/* ------------------------------- */
-	//obj  = 'ea';
-	obj  = 'multi';
+	obj  = 'ea';
+	//obj  = 'multi';
 	/* ------------------------------- */
 
 	/* settings language */
@@ -763,7 +764,7 @@ function removeDirections(){
 
 
 
-function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time){
+function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,legNum){
 
 		var imgSrc = "";
 
@@ -861,7 +862,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 	   }else{
 			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination:" + distance;
 //			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
-			imgSrc = "";
+			imgSrc = undefined;
 		}
 
 
@@ -884,15 +885,62 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 	nodeInfo.appendChild(textnode);      
 	nodeInfo.style.float = "center";
 
-	var node  = document.createElement('pre');
+	var node;
+	if(imgSrc == undefined){
+		node  = document.createElement('pre');
+	}else{
+		node  = document.createElement('button');
 
-	if(imgSrc != ""){
+		node.onclick = function(){
+										 focusLeg(legNum); return false;
+									  };
+	}
+	node.style.height = "100%";
+	node.style.width  = "100%";
+
+	if(imgSrc != undefined){
 		node.appendChild(imageNode);
 	}
 	node.appendChild(nodeInfo);
 //	node.appendChild(textnode);
 
 	document.getElementById("directions").appendChild(node);
+
+	return false;
+}
+
+
+
+function focusLeg(legNum){
+
+	var legslat = queryLeg[legNum].coordinates[0][0];
+	var legslon = queryLeg[legNum].coordinates[0][1];
+
+	var legdlat = queryLeg[legNum].coordinates[queryLeg[legNum].coordinates.length-1][0];
+	var legdlon = queryLeg[legNum].coordinates[queryLeg[legNum].coordinates.length-1][1];
+
+	var clat = Math.abs(legslat+legdlat)/2;
+	var clon = Math.abs(legslon+legdlon)/2;
+
+	localmap.setCenter(new google.maps.LatLng(clat, clon));
+	//localmap.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+
+	var latlngb = [
+		 new google.maps.LatLng(legslat, legslon),
+		 new google.maps.LatLng(legdlat, legdlon),
+	]; 
+
+	var latlngbounds = new google.maps.LatLngBounds();
+
+	for (var i = 0; i < latlngb.length; i++) {
+		 latlngbounds.extend(latlngb[i]);
+	}
+	localmap.fitBounds(latlngbounds);
+	
+	var zoom = localmap.getZoom();
+	if(zoom > 17){
+		localmap.setZoom(17);
+	}
 
 	return false;
 }
@@ -1007,7 +1055,7 @@ function queryRoute(){
 	var totalTimeTravel = jsonRoutes.routes[j].travel_time;
 	var totalDistanceTravel = jsonRoutes.routes[j].distance;
 	//alert(totalTimeTravel);
-	addDirections("total","","","","","","","", totalDistanceTravel, totalTimeTravel, "");
+	addDirections("total","","","","","","","", totalDistanceTravel, totalTimeTravel, "",-1);
 
 	/* find total walking time of the route */
 	total_walk_travel_time=0;
@@ -1055,7 +1103,7 @@ function queryRoute(){
 		/* + street,arrivalTime,leaveTime,waitTime */
 		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE);
 
-		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time);
+		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,i);
 		/* add desc, distance, travel_time, walk_time */
 	}
 
@@ -1122,7 +1170,6 @@ function queryRoute(){
 
 
 	/* map cenetering */
-
 	var clat = Math.abs(slat+dlat)/2;
 	var clon = Math.abs(slon+dlon)/2;
 
@@ -1180,7 +1227,6 @@ function queryRoute(){
 	}
 
 
-
 	var latlngb = [
 		 new google.maps.LatLng(maxLat, maxLon),
 		 new google.maps.LatLng(minLat, minLon),
@@ -1192,6 +1238,7 @@ function queryRoute(){
 		 latlngbounds.extend(latlngb[i]);
 	}
 	localmap.fitBounds(latlngbounds);
+	queryLeg = jsonRoutes.routes[j].legs;
 
 	return false;	
 }
