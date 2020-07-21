@@ -330,6 +330,7 @@ function sPointSetMenu(){
 	var markerS = new google.maps.Marker({
 			 position: contextLatLng,
 			 map: localmap,
+			 icon:'./img/start.png',
 			title: messageS
 		 });
 
@@ -401,6 +402,7 @@ function dPointSetMenu(){
 	var markerS = new google.maps.Marker({
 			 position: contextLatLng,
 			 map: localmap,
+			 icon:'./img/end.png',
 			title: messageS
 		 });
 
@@ -668,7 +670,7 @@ function toDate(unix_timestamp){
 	return formattedTime;
 }
 
-function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTime,waitTime,streetEnd,arrivalTimeEnd){
+function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTime,waitTime,streetEnd,arrivalTimeEnd,type,StartEnd){
 
 
 	var color;
@@ -692,6 +694,52 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 	  default:
 		color='#66bb6a';
 	} 
+
+
+
+		var testing = false;
+		var imgSrcS = '';
+		var imgSrcE = '';
+		if (!testing && type === "walk"){
+			imgSrcS = './img/walk3.png';
+			imgSrcE = '';
+		}else if ( !testing &&  type === "bus" ){
+			imgSrcS = './img/bus.png';
+			imgSrcE = '';
+		}else if ( !testing &&  type === "car" ){
+			imgSrcS = './img/car2m.png';
+			imgSrcE = '';
+		}else if ( !testing &&  type === "rail" ){
+			imgSrcS = './img/train.png';
+			imgSrcE = '';
+		}else if ( !testing &&  type === "subway" ){
+			imgSrcS = './img/subway.png';
+			imgSrcE = '';
+		}else if ( !testing &&  type === "tram" ){
+			imgSrcS = './img/tram.png';
+			imgSrcE = '';
+		}else if ( !testing &&  type === "ferry" ){
+			imgSrcS = './img/ferry.png';
+			imgSrcE = '';
+		}else if ( !testing &&  type === "trolleybus" ){
+			imgSrcS = './img/trolleybus.png';
+			imgSrcE = '';
+	   }else{
+			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination:" + distance;
+//			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
+			imgSrc = undefined;
+		}
+
+
+		if ( !testing &&  StartEnd === "start" ){
+			imgSrcS = './img/start.png';
+		}else if ( !testing &&  StartEnd === "end" ){
+			imgSrcE = './img/end.png'
+		}else if ( !testing &&  StartEnd === "startend" ){
+			imgSrcS = './img/start.png';
+			imgSrcE = './img/end.png'
+		}
+
 
 
 	var route=[];
@@ -725,20 +773,30 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 							'\nWait Time: '+ waitTime +
 							'\nTransport: '+ colorMod;
 
+		var myIcon = new google.maps.MarkerImage(imgSrcS);
 		var markerS = new google.maps.Marker({
 			 position: route[0],
 			 map: localmap,
-			title: messageS
+			 icon:  myIcon,
+			 title: messageS
 		  });
+
+		markerS.icon.scale=20;
 
 		var messageE = 'Street: ' + streetEnd + 
 							'\nArrival Time: '+ toDate(arrivalTimeEnd);
 
+		myIcon = new google.maps.MarkerImage(imgSrcE);
 		var markerE = new google.maps.Marker({
 			 position: route[route.length-1],
 			 map: localmap,
+			 icon: myIcon,
 			 title: messageE
+			
 		  });
+
+		markerE.icon.scale=20;
+
 		markerS.setMap(localmap);
 		markerE.setMap(localmap);
 		globalMarkerMap.push(markerS);
@@ -1030,23 +1088,6 @@ function queryRoute(){
 		mainRoute = numRoutes-1;
 	}
 
-
-
-/* alternative routes, if want to be seen un-comment this section */
-/*
-	for(var j=0; j<numRoutes; j++){
-		if(j==mainRoute){
-			continue;
-		}
-		numIter = jsonRoutes.routes[j].legs.length;
-		for(var i=0; i<numIter; i++){
-			var route = jsonRoutes.routes[j].legs[i].coordinates;
-			var type  = jsonRoutes.routes[j].legs[i].type;
-			
-			drawLineMap(route,'',false,"","","","","","");
-		}
-	}
-*/
 	/* Draw lines with colors */
 	var j=mainRoute;
 
@@ -1086,8 +1127,18 @@ function queryRoute(){
 		var distance = jsonRoutes.routes[j].legs[i].distance;
 		var travel_time = jsonRoutes.routes[j].legs[i].travel_time;
 		var walk_time = jsonRoutes.routes[j].legs[i].travel_time;
+		var StartEnd = '';
 		if(i==0){
 			arrivalTime=0;
+			StartEnd = 'start';
+		}
+
+		if(i==numIter-1){
+			StartEnd = 'end';
+		}
+
+		if(numIter == 1){
+			StartEnd = 'startend';
 		}
 
 		var streetE = jsonRoutes
@@ -1101,7 +1152,7 @@ function queryRoute(){
 							.extra_data[jsonRoutes.routes[j].legs[i].extra_data.length-1][1];
 
 		/* + street,arrivalTime,leaveTime,waitTime */
-		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE);
+		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE,type,StartEnd);
 
 		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,i);
 		/* add desc, distance, travel_time, walk_time */
