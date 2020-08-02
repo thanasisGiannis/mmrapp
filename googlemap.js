@@ -1,7 +1,6 @@
 
 // Initialize and add the map
 var localmap;
-
 // Global Variables for accessing data
 // default dummy values
 var lg;//   = 'en';
@@ -32,6 +31,39 @@ var contextMenuDpoint = undefined;
 var pointSinMap = false;
 var pointDinMap = false;
 var total_walk_travel_time=0; // total walking time in a route
+
+
+
+/* profile data */
+var userLoggedIn=false; // true or false if a user is logged in
+var userProfile; // raw data about user
+var userName;
+var userMail;
+var userCity;
+var userCountry;
+
+
+
+
+function userLogInSubmit(){
+/* user log in */
+
+	var jslogin ='mobile';// document.getElementById("login").value;
+	var jsusername = document.getElementById("username").value;
+	var jsuserpass = document.getElementById("userpass").value;
+	
+	$.ajax({
+		   url: "./logInForm.php",
+			type: "POST",
+			data:{login: jslogin, email: jsusername, password: jsuserpass}
+		 }).done(function(data) {
+		   alert(data);
+		 });
+
+	return false;
+}
+
+
 function changeRoute(routeNum){
 //	alert(routeNum.value);
 
@@ -86,9 +118,9 @@ function setDefault(){
 	/* --------------------- */
 	var d = new Date();
   	var ms = d.getTime();	
-	ts = Math.round(ms/1000); // round to nearest second
-
-	var month = d.getMonth();
+	ts = Math.round(ms/1000)*1000; // round to nearest second
+	
+	var month = d.getMonth() + 1;
 	if (month < 10){
 		month = "0"+month;
 	}
@@ -99,7 +131,10 @@ function setDefault(){
 	}
 
 	document.getElementById("timeD").value = ""+toDate(ts)+"";
-	document.getElementById("dateD").value = d.getFullYear() +"-"+month+"-"+day;
+	document.getElementById("dateD").value = ""+d.getFullYear() +"-"+month+"-"+day;
+
+
+	console.log('DateD: ' + d.getFullYear() +"-"+month+"-"+day);
 
 	document.getElementById("timeA").value = "";
 	document.getElementById("dateA").value = "";
@@ -110,7 +145,6 @@ function setDefault(){
 	/* settings 3 routes asked default */
 	/* ------------------------------- */
 	obj  = 'ea';
-	//obj  = 'multi';
 	/* ------------------------------- */
 
 	/* settings language */
@@ -219,7 +253,7 @@ function updateSettings(){
 		obj  = 'ea'; 
 	}
 	if(ldObj.checked == true){
-		obj  = 'ld';
+		obj  = 'minTran';
 	}
 	/* -------------------------------- */
 
@@ -287,8 +321,7 @@ function errorGeolocation(err){
 
 function getLocation() {
   if (navigator.geolocation) {
-	//console.log('hey');
-   navigator.geolocation.getCurrentPosition(myPositionInMap,errorGeolocation,{timeout:1000});
+	navigator.geolocation.getCurrentPosition(myPositionInMap,errorGeolocation,{timeout:1000});
   } else {
     console.log("Geolocation is not supported by this browser.");
   }
@@ -339,17 +372,11 @@ function sPointSetMenu(){
 	contextMenuSpoint=markerS;
 
 	document.getElementById("spoint").value=messageS;
-//document.getElementById("spoint").value=dest;
 	document.getElementById("spoint").placeholder=messageS;
-//document.getElementById("spoint").placeholder=dest;
 
 	console.log("Before spoint: "+latLng);
 
-//   document.getElementById("spoint").value=latLng;
-//	document.getElementById("spoint").placeholder=latLng;
-
 	console.log("spoint: " +  document.getElementById("spoint").value);
-	//console.log('messageS: ' + messageS);
 	latLng[0].replace(" ","");
 	latLng[1].replace(" ","");
 
@@ -409,14 +436,8 @@ function dPointSetMenu(){
 	globalMarkerMap.push(markerS);
 	contextMenuDpoint=markerS;
 
-	//console.log('messageS: ' + messageS);
 	document.getElementById("epoint").value=messageS;
-//	document.getElementById("epoint").value=dest;
 	document.getElementById("epoint").placeholder=messageS;
-//	document.getElementById("epoint").placeholder=dest;
-
-//   document.getElementById("epoint").value=latLng;
-//	document.getElementById("epoint").placeholder=latLng;
 
 	latLng[0].replace(" ","");
 	latLng[1].replace(" ","");
@@ -424,7 +445,6 @@ function dPointSetMenu(){
 	dlon = Number(latLng[1]);
 	if(pointSinMap == true){
 		console.log(latLng);
-//		updateRouteFromContextMenu(slat,slon,dlat,dlon);
 		updateRoute(spoint,epoint);
 		pointDinMap = true;
 	}else{
@@ -454,7 +474,7 @@ function initMap() {
                 },
                 tileSize: new google.maps.Size(256, 256),
                 name: "OpenStreetMap",
-                maxZoom: 18
+                maxZoom: 17
             }));
 
 	//map = localmap;
@@ -942,7 +962,8 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 	var nodeInfo = document.createElement("pre");
 	nodeInfo.appendChild(textnode);      
 	nodeInfo.style.float = "center";
-
+	nodeInfo.style.backgroundColor = "white";
+	nodeInfo.style.borderColor = "white";
 	var node;
 	if(imgSrc == undefined){
 		node  = document.createElement('pre');
@@ -955,7 +976,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 	}
 	node.style.height = "100%";
 	node.style.width  = "100%";
-
+	node.style.backgroundColor = "white";
 	if(imgSrc != undefined){
 		node.appendChild(imageNode);
 	}
@@ -1301,5 +1322,36 @@ function openNav() {
 
 function closeNav() {
 	document.getElementById("settingsSideNav").style.width = "0%";
+}
+
+
+function cssDeviceChange( swidth,sheight){
+
+//style="width:100px; max-width:400px;"
+
+	if(swidth <= 800){
+		/* mobile or tablet */
+		document.getElementById("map").style.width = "100%";
+		document.getElementById("buttonsID").style.width = "100%";
+		document.getElementById("buttonsID").style.zoom = "0.8";
+		document.getElementById("directions").style.zoom = "0.8";
+		document.getElementById("routeNum").style.maxWidth = "200px";
+		
+
+	}else{
+
+		document.getElementById("buttonsID").style.width = "450px";
+		document.getElementById("buttonsID").style.maxWidth = "450px";
+
+		var buttonW = parseInt(document.getElementById("buttonsID").style.width, 10);
+		document.getElementById("map").style.width = swidth-buttonW +'px';
+		
+		document.getElementById("directions").style.zoom = "1";
+		document.getElementById("routeNum").style.maxWidth = "450px";
+
+	//	document.getElementById("routeNum").style.width = "";
+
+	}
+
 }
 

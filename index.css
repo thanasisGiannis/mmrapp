@@ -1,6 +1,13 @@
-#map {
-	height:  75vh;
+.map {
+/*	height:  75vh;
 	width :  74vw;
+*/
+	height: 500px;
+	width: 500px;
+
+	min-height:500px;
+	min-width:500px;
+
 }
 
 div.directions {
