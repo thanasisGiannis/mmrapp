@@ -118,7 +118,7 @@ function setDefault(){
 	/* --------------------- */
 	var d = new Date();
   	var ms = d.getTime();	
-	ts = Math.round(ms/1000)*1000; // round to nearest second
+	ts = Math.round(ms/1000); // round to nearest second
 	
 	var month = d.getMonth() + 1;
 	if (month < 10){
@@ -939,7 +939,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 			imgSrc = './img/trolleybusar.png';
 	   }else{
 			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination:" + distance;
-//			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
 			imgSrc = undefined;
 		}
 
@@ -952,21 +951,47 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 
 	imageNode.src  = imgSrc;
-	imageNode.style.height = "9vh";
-	imageNode.style.width  = "4vw";
+	imageNode.style.height = '50%';//"9vh";
+	imageNode.style.width  = '20%';//"4vw";
 	imageNode.style.float = "left";
-
 
 	var textnode = document.createTextNode(outputMessage);
 
+	var spanNode = document.createElement('span');
+	spanNode.className = "inner-pre";
+
+	var swidth = $( window ).width();
+	if ( swidth >= 800 ){
+		spanNode.style.fontSize = "12px";
+	}else{
+		spanNode.style.fontSize = "9px";
+
+	}
+
+	spanNode.id = 'directionsID' + legNum;
+	spanNode.appendChild(textnode);
+
+
 	var nodeInfo = document.createElement("pre");
-	nodeInfo.appendChild(textnode);      
+
+//	nodeInfo.appendChild(textnode);      
+	nodeInfo.appendChild(spanNode);      
+
 	nodeInfo.style.float = "center";
 	nodeInfo.style.backgroundColor = "white";
 	nodeInfo.style.borderColor = "white";
+
+
+
 	var node;
 	if(imgSrc == undefined){
-		node  = document.createElement('pre');
+		//node  = document.createElement('pre');
+		node  = document.createElement('button');
+
+		node.onclick = function(){
+										 focusLeg(-1); return false;
+									  };
+
 	}else{
 		node  = document.createElement('button');
 
@@ -974,6 +999,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 										 focusLeg(legNum); return false;
 									  };
 	}
+
 	node.style.height = "100%";
 	node.style.width  = "100%";
 	node.style.backgroundColor = "white";
@@ -992,12 +1018,27 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 function focusLeg(legNum){
 
-	var legslat = queryLeg[legNum].coordinates[0][0];
-	var legslon = queryLeg[legNum].coordinates[0][1];
+		var legslat;
+		var legslon;
 
-	var legdlat = queryLeg[legNum].coordinates[queryLeg[legNum].coordinates.length-1][0];
-	var legdlon = queryLeg[legNum].coordinates[queryLeg[legNum].coordinates.length-1][1];
+		var legdlat;
+		var legdlon;
 
+	if(legNum==-1){
+		legslat = queryLeg[0].coordinates[0][0];
+		legslon = queryLeg[0].coordinates[0][1];
+
+		legdlat = queryLeg[queryLeg.length-1].coordinates[0][0];
+		legdlon = queryLeg[queryLeg.length-1].coordinates[0][1];
+
+	}else{
+		legslat = queryLeg[legNum].coordinates[0][0];
+		legslon = queryLeg[legNum].coordinates[0][1];
+
+		legdlat = queryLeg[legNum].coordinates[queryLeg[legNum].coordinates.length-1][0];
+		legdlon = queryLeg[legNum].coordinates[queryLeg[legNum].coordinates.length-1][1];
+	}
+	
 	var clat = Math.abs(legslat+legdlat)/2;
 	var clon = Math.abs(legslon+legdlon)/2;
 
@@ -1056,17 +1097,6 @@ function queryRoute(){
 	
 	if (success==0){
 
-/*
-		if(contextMenuSpoint!=undefined){
-			contextMenuSpoint.setMap(null);
-			contextMenuSpoint=undefined;
-		}
-
-		if(contextMenupDoint!=undefined){
-			contextMenupDoint.setMap(null);
-			contextMenuDpoint=undefined;
-		}
-*/
 		alert('No route');
 		return false;
 	}
@@ -1092,18 +1122,6 @@ function queryRoute(){
 
 	var numRoutes = jsonRoutes.routes.length; 
 
-
-/*
-	var outputvar = "";
-	for(var i=0;i<numRoutes;i++){
-		for(var j=0;j<jsonRoutes.routes[i].object.length;j++){
-			outputvar = outputvar + " "+ i+ " " + jsonRoutes.routes[i].object[j];
-		}
-
-	}
-
-	alert(outputvar);
-*/
 
 	if(mainRoute>=numRoutes){
 		mainRoute = numRoutes-1;
@@ -1334,9 +1352,36 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("map").style.width = "100%";
 		document.getElementById("buttonsID").style.width = "100%";
 		document.getElementById("buttonsID").style.zoom = "0.8";
-		document.getElementById("directions").style.zoom = "0.8";
 		document.getElementById("routeNum").style.maxWidth = "200px";
-		
+
+		/* Transport Preferences */
+		/* --------------------- */
+		document.getElementById("closebtnNav").style.zoom = "0.8";
+		document.getElementById("transPrefHeader").style.zoom = "0.7";
+		document.getElementById("headMaxWalkTime").style.zoom = "0.7";
+		document.getElementById("headRoutesCheckBox").style.zoom = "0.7";
+		document.getElementById("headDeparture").style.zoom = "0.7";
+		document.getElementById("headArrival").style.zoom = "0.7";
+
+		document.getElementById("labelDateD").style.display = "block";
+		document.getElementById("timeDateD").style.display = "block";
+		document.getElementById("labelDateA").style.display = "block";
+		document.getElementById("timeDateA").style.display = "block";
+		/* --------------------- */
+
+		if (queryLeg != undefined){
+			var legLength =  queryLeg.length;
+			for(j=0;j<queryLeg.length;j++){
+				document.getElementById("directionsID"+j).style.fontSize = "11px";
+			}		
+		}
+
+		document.getElementById("map").className = "col-sm-3";
+		document.getElementById("map").style.height = "45vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("directions").style.maxHeight = "50vh";//0.9*sheight + "px";//"75vh";
+
+		document.getElementById("mmrpHEADGLOBAL").style.zoom="0.5";
+
 
 	}else{
 
@@ -1349,7 +1394,34 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("directions").style.zoom = "1";
 		document.getElementById("routeNum").style.maxWidth = "450px";
 
-	//	document.getElementById("routeNum").style.width = "";
+
+		/* Transport Preferences */
+		/* --------------------- */
+		document.getElementById("closebtnNav").style.zoom = "1";
+		document.getElementById("transPrefHeader").style.zoom = "1";
+		document.getElementById("headMaxWalkTime").style.zoom = "1";
+		document.getElementById("headRoutesCheckBox").style.zoom = "1";
+		document.getElementById("headDeparture").style.zoom = "1";
+		document.getElementById("headArrival").style.zoom = "1";
+
+		document.getElementById("labelDateD").style.display = "";
+		document.getElementById("timeDateD").style.display = "";
+		document.getElementById("labelDateA").style.display = "";
+		document.getElementById("timeDateA").style.display = "";
+		/* --------------------- */
+
+		if (queryLeg != undefined){
+			var legLength =  queryLeg.length;
+			for(j=0;j<queryLeg.length;j++){
+				document.getElementById("directionsID"+j).style.fontSize = "12px";
+			}		
+		}
+
+		document.getElementById("map").className = "col-sm-9";
+		document.getElementById("map").style.height = "75vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("directions").style.maxHeight = "56.5vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("mmrpHEADGLOBAL").style.zoom="1";
+
 
 	}
 
