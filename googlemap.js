@@ -44,6 +44,10 @@ var userCountry;
 
 
 
+var longpress = false;
+
+
+
 
 function userLogInSubmit(){
 /* user log in */
@@ -331,10 +335,8 @@ function getLocation() {
 function sPointSetMenu(){
 
 
-	if (contextMenuDisplayed == true){
-		  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
-				 menuBox.style.display = "none";
-	}
+	var menuBox = document.getElementById("contextGoogleMapsMenu");
+	menuBox.style.display = "none";
 
 
 	var latLng = contextLatLng.toString(); 
@@ -397,10 +399,8 @@ function sPointSetMenu(){
 
 function dPointSetMenu(){
 
-	if (contextMenuDisplayed == true){
-		  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
-				 menuBox.style.display = "none";
-	}
+	var menuBox = document.getElementById("contextGoogleMapsMenu");
+	menuBox.style.display = "none";
 
 	var latLng = contextLatLng.toString(); 
 	latLng = latLng.replace('(','');
@@ -477,9 +477,6 @@ function initMap() {
                 maxZoom: 17
             }));
 
-	//map = localmap;
-
-
 	localmap.addListener('rightclick', function(e) {
 
 
@@ -487,30 +484,96 @@ function initMap() {
 	
 		var menuBox = document.getElementById("contextGoogleMapsMenu");
 		var localmap = document.getElementById("map");		
-		//menuBox.style.left = left + "px";
-		//menuBox.style.top  = top + "px";
-		var leftS = localmap.getBoundingClientRect().left + e.pixel.x;
-		var topS  = localmap.getBoundingClientRect().top  + e.pixel.y;
-		
-		menuBox.style.left = leftS + "px";
-		menuBox.style.top  = topS  + "px";
 
+		var menuBoxWidth = menuBox.style.width;
+		menuBoxWidth = parseInt(String(menuBoxWidth).replace('px',''));
+
+
+		var menuBoxHeight = menuBox.style.height;
+		menuBoxHeight = parseInt(String(menuBoxHeight).replace('px',''));
+		
+
+
+		var Xpos = parseInt(localmap.getBoundingClientRect().left + e.pixel.x);
+		var Ypos  = parseInt(localmap.getBoundingClientRect().top  + e.pixel.y);
+
+		var Xpos2 = Xpos;
+		var Ypos2 = Ypos;
+
+		if(Xpos  > localmap.getBoundingClientRect().right/2){
+			Xpos2 = (Xpos - menuBoxWidth);
+		}
+
+		if(Ypos  > localmap.getBoundingClientRect().bottom/2){
+			Ypos2 = Ypos2 - menuBoxHeight;
+		}
+
+		menuBox.style.left = Xpos2  + "px";
+		menuBox.style.top  = Ypos2  + "px";
 	
 		menuBox.style.display = "block";
 		contextMenuDisplayed = true;
  
-	});
 
+	});
 
 
 	localmap.addListener("click", function (e)
 	{
+			var timeOutSuccess = false;
+			if(contextMenuDisplayed == false){
+				setTimeout(function(){
+					  
+								contextLatLng = e.latLng;
+							
+								var menuBox = document.getElementById("contextGoogleMapsMenu");
+								var localmap = document.getElementById("map");		
+
+								var menuBoxWidth = menuBox.style.width;
+								menuBoxWidth = parseInt(String(menuBoxWidth).replace('px',''));
+
+
+								var menuBoxHeight = menuBox.style.height;
+								menuBoxHeight = parseInt(String(menuBoxHeight).replace('px',''));
+								
+
+
+								var Xpos = parseInt(localmap.getBoundingClientRect().left + e.pixel.x);
+								var Ypos  = parseInt(localmap.getBoundingClientRect().top  + e.pixel.y);
+
+								var Xpos2 = Xpos;
+								var Ypos2 = Ypos;
+
+								if(Xpos  > localmap.getBoundingClientRect().right/2){
+									Xpos2 = (Xpos - menuBoxWidth);
+								}
+
+								if(Ypos  > localmap.getBoundingClientRect().bottom/2){
+									Ypos2 = Ypos2 - menuBoxHeight;
+								}
+
+								menuBox.style.left = Xpos2  + "px";
+								menuBox.style.top  = Ypos2  + "px";
+							
+								menuBox.style.display = "block";
+								contextMenuDisplayed = true;
+								timeOutSuccess = true;
+					
+				 }, 1000);
+			}
+
 		if (contextMenuDisplayed == true)
 	 	{
+  			 contextMenuDisplayed = false;
 	  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
 			 menuBox.style.display = "none";
 		}
+
 	});
+
+
+
+
 
 
 
