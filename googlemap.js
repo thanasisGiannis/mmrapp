@@ -57,11 +57,12 @@ function userLogInSubmit(){
 	var jsuserpass = document.getElementById("userpass").value;
 	
 	$.ajax({
-		   url: "./logInForm.php",
+		   //url: "./logInForm.php",
+			url: "https://www.investment.upatras.gr/webui/includes/config.php",
 			type: "POST",
 			data:{login: jslogin, email: jsusername, password: jsuserpass}
 		 }).done(function(data) {
-		   alert(data);
+		   console.log('hey');
 		 });
 
 	return false;
@@ -99,13 +100,19 @@ function updateMod(modButton){
 function setDefault(){
 
 	lg   = 'en';
+
+/*
 	slat = 38.2466036;
 	slon = 21.7361790;
 
 	dlat = 38.2466404;
 	dlon = 21.7361404;
+*/
+	slat = null;
+	slon = null;
 
-
+	dlat = null;
+	dlon = null;
 
 
 
@@ -1009,10 +1016,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 
 
-
-
-
-
 	imageNode.src  = imgSrc;
 	imageNode.style.height = '50%';//"9vh";
 	imageNode.style.width  = '20%';//"4vw";
@@ -1091,8 +1094,14 @@ function focusLeg(legNum){
 		legslat = queryLeg[0].coordinates[0][0];
 		legslon = queryLeg[0].coordinates[0][1];
 
-		legdlat = queryLeg[queryLeg.length-1].coordinates[0][0];
-		legdlon = queryLeg[queryLeg.length-1].coordinates[0][1];
+		if(queryLeg.length > 1){
+			legdlat = queryLeg[queryLeg.length-1].coordinates[0][0];
+			legdlon = queryLeg[queryLeg.length-1].coordinates[0][1];
+		}else{
+			legdlat = queryLeg[0].coordinates[queryLeg[0].coordinates.length-1][0];
+			legdlon = queryLeg[0].coordinates[queryLeg[0].coordinates.length-1][1];
+
+		}
 
 	}else{
 		legslat = queryLeg[legNum].coordinates[0][0];
@@ -1284,6 +1293,7 @@ function queryRoute(){
 		document.getElementById("routeNum"+routeNumUp).selected=true;
 
 
+
 		/* clear dropdown route directions */
 		document.getElementById("routeNum1").innerText = "";				
 		document.getElementById("routeNum2").innerText = "";				
@@ -1413,8 +1423,10 @@ function cssDeviceChange( swidth,sheight){
 	if(swidth <= 800){
 		/* mobile or tablet */
 		document.getElementById("map").style.width = "100%";
-		document.getElementById("buttonsID").style.width = "100%";
-		document.getElementById("buttonsID").style.zoom = "0.8";
+		if( document.getElementById("buttonsID")!= null){
+			document.getElementById("buttonsID").style.width = "100%";
+			document.getElementById("buttonsID").style.zoom = "0.8";
+		}
 		document.getElementById("routeNum").style.maxWidth = "200px";
 
 		/* Transport Preferences */
@@ -1432,6 +1444,31 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("timeDateA").style.display = "block";
 		/* --------------------- */
 
+
+		document.getElementById("map").className = "col-sm-3";
+		document.getElementById("map").style.height = "50vh";//"45vh";//0.9*sheight + "px";//"75vh";
+
+		document.getElementById("mmrpHEADGLOBAL").style.zoom="0.4";
+
+
+
+		if( document.getElementById("directions2") != null){
+			if(document.getElementById("directions")!= null ){
+				document.getElementById("directions").innerHTML='';
+				document.getElementById("directions").id = "directions1"; 
+				document.getElementById("directions1").style.visibility = "hidden";
+			}
+			document.getElementById("directions2").id = "directions"; 
+			document.getElementById("directions").style.visibility = "visible";
+			if(slat != null || dlat!= null || slon!=null || dlon != null){		
+				queryRoute();
+			}
+		}
+
+
+
+
+		document.getElementById("directions").style.maxHeight = "30vh";//"50vh";//0.9*sheight + "px";//"75vh";
 		if (queryLeg != undefined){
 			var legLength =  queryLeg.length;
 			for(j=0;j<queryLeg.length;j++){
@@ -1439,22 +1476,15 @@ function cssDeviceChange( swidth,sheight){
 			}		
 		}
 
-		document.getElementById("map").className = "col-sm-3";
-		document.getElementById("map").style.height = "45vh";//0.9*sheight + "px";//"75vh";
-		document.getElementById("directions").style.maxHeight = "50vh";//0.9*sheight + "px";//"75vh";
-
-		document.getElementById("mmrpHEADGLOBAL").style.zoom="0.5";
-
-
 	}else{
 
-		document.getElementById("buttonsID").style.width = "450px";
-		document.getElementById("buttonsID").style.maxWidth = "450px";
-
+		if( document.getElementById("buttonsID")!= null){
+			document.getElementById("buttonsID").style.width = "450px";
+			document.getElementById("buttonsID").style.maxWidth = "450px";
+		}
 		var buttonW = parseInt(document.getElementById("buttonsID").style.width, 10);
 		document.getElementById("map").style.width = swidth-buttonW +'px';
 		
-		document.getElementById("directions").style.zoom = "1";
 		document.getElementById("routeNum").style.maxWidth = "450px";
 
 
@@ -1473,20 +1503,38 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("timeDateA").style.display = "";
 		/* --------------------- */
 
+
+		document.getElementById("map").className = "col-sm-9";
+		document.getElementById("map").style.height = "75vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("mmrpHEADGLOBAL").style.zoom="1";
+
+
+
+		if( document.getElementById("directions1") != null){
+
+			if(document.getElementById("directions")!= null){
+				document.getElementById("directions").innerHTML='';
+				document.getElementById("directions").id = "directions2"; 
+				document.getElementById("directions2").style.visibility = "hidden";
+			}
+			document.getElementById("directions1").id = "directions"; 
+			document.getElementById("directions").style.visibility = "visible";
+			if(slat != null || dlat!= null || slon!=null || dlon != null){		
+				queryRoute();
+			}
+		}
+
+		document.getElementById("directions").style.zoom = "1";
 		if (queryLeg != undefined){
 			var legLength =  queryLeg.length;
 			for(j=0;j<queryLeg.length;j++){
 				document.getElementById("directionsID"+j).style.fontSize = "12px";
 			}		
 		}
-
-		document.getElementById("map").className = "col-sm-9";
-		document.getElementById("map").style.height = "75vh";//0.9*sheight + "px";//"75vh";
 		document.getElementById("directions").style.maxHeight = "56.5vh";//0.9*sheight + "px";//"75vh";
-		document.getElementById("mmrpHEADGLOBAL").style.zoom="1";
-
 
 	}
 
+	return false;
 }
 
