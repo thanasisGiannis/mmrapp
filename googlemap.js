@@ -52,19 +52,42 @@ var longpress = false;
 function userLogInSubmit(){
 /* user log in */
 
+//	console.log('hey1');
+//	return false;
 	var jslogin ='mobile';// document.getElementById("login").value;
 	var jsusername = document.getElementById("username").value;
 	var jsuserpass = document.getElementById("userpass").value;
 	
+
+	var jsonData = JSON.stringify({
+				 						 "login"   : jslogin,
+										 "email"   : jsusername,
+										 "password": jsuserpass
+										});
+
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText);
+			
+		}
+	};
+
+
+	
+	console.log(jsonData);
+	xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/logInForm.php?data2b="+jsonData, true);
+	xmlhttp.send();
+
+/*
 	$.ajax({
-		   //url: "./logInForm.php",
-			url: "https://www.investment.upatras.gr/webui/includes/config.php",
+		   url: "https://www.investment.upatras.gr/mmrp/login.php",
 			type: "POST",
 			data:{login: jslogin, email: jsusername, password: jsuserpass}
 		 }).done(function(data) {
 		   console.log('hey');
 		 });
-
+*/
 	return false;
 }
 
@@ -141,14 +164,14 @@ function setDefault(){
 		day = "0"+day;
 	}
 
-	document.getElementById("timeD").value = ""+toDate(ts)+"";
-	document.getElementById("dateD").value = ""+d.getFullYear() +"-"+month+"-"+day;
+	document.getElementById("timeModal").value = ""+toDate(ts)+"";
+	document.getElementById("dateModal").value = ""+d.getFullYear() +"-"+month+"-"+day;
 
 
 	console.log('DateD: ' + d.getFullYear() +"-"+month+"-"+day);
 
-	document.getElementById("timeA").value = "";
-	document.getElementById("dateA").value = "";
+//	document.getElementById("timeA").value = "";
+//	document.getElementById("dateA").value = "";
 	/* --------------------- */
 
 
@@ -189,41 +212,42 @@ function setDefault(){
 
 function updateSettings(){
 
-
-
 	/* settings date default */
 	/* --------------------- */
-	var timeD = document.getElementById("timeD").value;
-	var dateD = document.getElementById("dateD").value;
+	var timeD = document.getElementById("timeModal").value;
+	var dateD = document.getElementById("dateModal").value;
 
-	if(timeD!="" && dateD!=""){
-			var hD = timeD.slice(0, 2); // hours
-			var minD = timeD.slice(3, 5); // minutes
+	var hD = timeD.slice(0, 2); // hours
+	var minD = timeD.slice(3, 5); // minutes
 
-			var yD = dateD.slice(0, 4); // year
-			var monthD = dateD.slice(5, 7); // month
-			var dayD = dateD.slice(8, 10); // day
+	var yD = dateD.slice(0, 4); // year
+	var monthD = parseInt(dateD.slice(5, 7))-1; // month
+	if(monthD > 9){
+		monthD = ""+monthD;
+	}else{
+		monthD = "0"+monthD;
+	}
+	var dayD = dateD.slice(8, 10); // day
 
-			var fullDateD = new Date(yD, monthD, dayD, hD, minD, "0","0");
-			console.log("ts-: " + ts);
-			ts = fullDateD.getTime() / 1000;
-			console.log("ts+: " + ts);
+	var fullDateD = new Date(yD, monthD, dayD, hD, minD, "0","0");
+	console.log("ts-: " + ts);
+	console.log("te-: " + te);
+
+	if(document.getElementById("labelDate").value=='D'){
+		ts = fullDateD.getTime() / 1000;
+		te = -1;
+	}else{
+		te = fullDateD.getTime() / 1000;
+		ts = -1;
 	}
 
-	var timeA = document.getElementById("timeA").value;
-	var dateA = document.getElementById("dateA").value;
+	var dtest = new Date(te * 1000)
+	console.log("Arrival date: "+ dtest);
 
-	if(timeA!="" && dateA!=""){
-			var hA = timeA.slice(0, 2); // hours
-			var minA = timeA.slice(3, 5); // minutes
+	console.log("MonthD: "+ monthD);
 
-			var yA = dateA.slice(0, 4); // year
-			var monthA = dateA.slice(5, 7); // month
-			var dayA = dateA.slice(8, 10); // day
-			console.log("te-: " + te);
-			te = fullDateD.getTime() / 1000;
-			console.log("te-: " + te);
-	}
+	console.log("ts+: " + ts);
+	console.log("te+: " + te);
 	/* --------------------- */
 
 
@@ -705,7 +729,7 @@ function updateRouteFromContextMenu(slat_,slon_,dlat_,dlon_){
 function updateRoute(spoint,epoint){
 
 	if (spoint.value == '' || epoint.value==''){
-		alert('Please type Starting Point and Destination')
+		alert('Please type Starting Point and Destination');
 		return;
 	}
 
@@ -1084,11 +1108,11 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 function focusLeg(legNum){
 
-		var legslat;
-		var legslon;
+	var legslat;
+	var legslon;
 
-		var legdlat;
-		var legdlon;
+	var legdlat;
+	var legdlon;
 
 	if(legNum==-1){
 		legslat = queryLeg[0].coordinates[0][0];
@@ -1156,7 +1180,7 @@ function queryRoute(){
 						+"&"+"skip="+skip;
 
 	
-
+	console.log(inputHttp);
 	var mmrappReq = Url + '?' + inputHttp;
 
 	var Httpreq = new XMLHttpRequest(); // a new request
@@ -1435,18 +1459,19 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("transPrefHeader").style.zoom = "0.7";
 		document.getElementById("headMaxWalkTime").style.zoom = "0.7";
 		document.getElementById("headRoutesCheckBox").style.zoom = "0.7";
-		document.getElementById("headDeparture").style.zoom = "0.7";
-		document.getElementById("headArrival").style.zoom = "0.7";
+		//document.getElementById("headDeparture").style.zoom = "0.7";
+		//document.getElementById("headArrival").style.zoom = "0.7";
 
-		document.getElementById("labelDateD").style.display = "block";
-		document.getElementById("timeDateD").style.display = "block";
-		document.getElementById("labelDateA").style.display = "block";
-		document.getElementById("timeDateA").style.display = "block";
+		//document.getElementById("labelDateD").style.display = "block";
+		//document.getElementById("timeDateD").style.display = "block";
+		//document.getElementById("labelDateA").style.display = "block";
+		//document.getElementById("timeDateA").style.display = "block";
 		/* --------------------- */
 
 
 		document.getElementById("map").className = "col-sm-3";
 		document.getElementById("map").style.height = "50vh";//"45vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("map").style.maxWidth = "100vw";//0.9*sheight + "px";//"75vh";
 
 		document.getElementById("mmrpHEADGLOBAL").style.zoom="0.4";
 
@@ -1494,18 +1519,20 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("transPrefHeader").style.zoom = "1";
 		document.getElementById("headMaxWalkTime").style.zoom = "1";
 		document.getElementById("headRoutesCheckBox").style.zoom = "1";
-		document.getElementById("headDeparture").style.zoom = "1";
-		document.getElementById("headArrival").style.zoom = "1";
+		//document.getElementById("headDeparture").style.zoom = "1";
+		//document.getElementById("headArrival").style.zoom = "1";
 
-		document.getElementById("labelDateD").style.display = "";
-		document.getElementById("timeDateD").style.display = "";
-		document.getElementById("labelDateA").style.display = "";
-		document.getElementById("timeDateA").style.display = "";
+		//document.getElementById("labelDateD").style.display = "";
+		//document.getElementById("timeDateD").style.display = "";
+		//document.getElementById("labelDateA").style.display = "";
+		//document.getElementById("timeDateA").style.display = "";
 		/* --------------------- */
 
 
 		document.getElementById("map").className = "col-sm-9";
 		document.getElementById("map").style.height = "75vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("map").style.maxWidth = "75vw";//0.9*sheight + "px";//"75vh";
+
 		document.getElementById("mmrpHEADGLOBAL").style.zoom="1";
 
 

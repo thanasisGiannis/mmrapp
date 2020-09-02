@@ -29,6 +29,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3" style="width:450px; max-width:450px;" id="buttonsID">
+				<p><a href="#profileModal" data-toggle="modal"
+								 data-target="#profileModal" >Login</a> |
+				<a href="" >Language </a> |
+				<!--a href="" >MMRP Evaluation</a> |
+				<a href="" >Report a bug</a--> 
+				<a href="" >Feedback</a>
+
 				<! buttons>
 				<div class="btn-group btn-group-lg">
 					<button id='trainButton' type="button" class="btn btn-primary" style="background-color:#d8d8d8;z-index:0;"><img src="./img/rail.png" alt='Public' width="30px" height="30px"></button>
@@ -37,12 +44,6 @@
 					<button   id='hybridButton' type="button" class="btn btn-primary" data-toggle="modal"
 								 data-target="#buttonCheckModal" style="background-color:#d8d8d8;z-index:0;">
 								 <img src="./img/pubcar.png" alt='Hybrid' width="30px" height="30px">
-					</button>
-
-
-					<button   id='profileButton' type="button" class="btn btn-primary" data-toggle="modal"
-								 data-target="#profileModal" style="background-color:#d8d8d8;z-index:0;">
-								 <img src="./img/ic_profile.png" alt='Profile' width="30px" height="30px">
 					</button>
 
 					<button  id='settingsButton' onclick="openNav()" type="button" class="btn btn-primary"
@@ -63,7 +64,7 @@
 						<!-- Modal content-->
 						<div class="modal-content">
 						  <div class="modal-header">
-							 <h4 class="modal-title">Choose mod</h4>
+							 <h4 class="modal-title">Which route legs do you wish to be connected with car directions?</h4>
 						  </div>
 						  <div class="modal-body">
 								<form id="buttonCheckBox">
@@ -104,7 +105,7 @@
 					 
 						<!-- Modal content-->
 						<div class="col-md-6 col-md-offset-3">
-						<h1 class="text-center text-bold mt-4x">Log in</h1>
+						<!--h1 class="text-center text-bold mt-4x">Log in</h1-->
 						<div class="well row pt-2x pb-3x bk-light">
 							<div class="col-md-8 col-md-offset-2">
 							  <form method="post">
@@ -280,8 +281,8 @@
 
     </div>
 
-	<!div class="col-sm-9" id="map" style=map>
-	<div class="col-sm-9" id="map" style="width:100vw; height:75vh;"></div>
+	<div class="col-sm-9" id="map" style=map>
+	<!div class="col-sm-9" id="map" style="width:100vw; height:75vh;"></div>
 	<div style="padding-top:2vh;"><div class="directions" id="directions2"></div></div>
 
 
@@ -296,7 +297,7 @@
 				  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" id="closebtnNav">&times;</a>
 
 						<div class="container" style="padding-top:3vh;align=center;background-color:#FFF; align-content: center;">
-						<h2 id="transPrefHeader">Transport Preferences</h2>
+						<h2 id="transPrefHeader">Preferred Modes</h2>
 						<form>
 						  <input checked type="checkbox" id="vehicleBus" name="vehicleBus" value="bus">
 						  <label for="bus">Bus</label><br>
@@ -340,6 +341,9 @@
 						</form>
 						</div>
 
+
+
+<!--
 						<div class="container" style="padding-top=3vh;background-color:#FFF; align-content: center;">
 						<h2 id="headDeparture">Departure</h2>
 						<form>
@@ -367,6 +371,29 @@
 						</form>
 						</div>
 			 			
+-->
+
+
+			<div class="container" style="padding-top=2vh;background-color:#FFF; align-content: center;">
+				<select class="dropdown" id="labelDate" >
+				  <!--option selected>Route to follow</option-->
+					<option selected value="D" for="labelDate" id="labelDateD" name="labelDate">Departure</option>
+					<option 			  value="A" for="labelDate" id="labelDateA" name="labelDate">Arrival</option>
+				  
+				</select>
+
+				<form>
+					<label id="labelDateForm" for="dateModal">Date:</label>
+					<input type="date" id="dateModal" name="dateModal"
+							 min="2018-01-01" max="2100-12-31">
+
+					<label id="labeTimeForm" for="timeModal">Time:</label>
+					<input type="time" id="timeModal" name="timeModal">
+
+				</form>
+
+			</div>
+
 
 
 						<div  class="container" style="padding-top:2vh;background-color:#FFF; align-content: center;">
