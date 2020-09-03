@@ -30,7 +30,7 @@
   <div class="row">
     <div class="col-sm-3" style="width:450px; max-width:450px;" id="buttonsID">
 				<p><a href="#profileModal" data-toggle="modal"
-								 data-target="#profileModal" >Login</a> |
+								 data-target="#profileModal" id="userLoginLink">Login</a> |
 				<a href="" >Language </a> |
 				<!--a href="" >MMRP Evaluation</a> |
 				<a href="" >Report a bug</a--> 
@@ -108,6 +108,8 @@
 						<!--h1 class="text-center text-bold mt-4x">Log in</h1-->
 						<div class="well row pt-2x pb-3x bk-light">
 							<div class="col-md-8 col-md-offset-2">
+								<! if not logged in>
+							  <div id="noLoggedIn" style="display:block">
 							  <form method="post">
 									<label for="" class="text-uppercase text-sm">Email or Username</label>
 									<input id="username" type="text" placeholder="Username" name="email" class="form-control mb" required>
@@ -120,7 +122,16 @@
 
 								<br>
 								<p>Don't Have an Account?<br> <a type="button" class="btn btn-default" data-toggle="modal"
-								 data-target="#createProfileModal" data-dismiss="modal">Sign up</a></p>
+								 data-target="#createProfileModal" data-dismiss="modal">Sign up</a>
+								</p>
+								</div>
+								<! if logged in>
+								<div id="LoggedIn" style="display:none">
+									<div id="LoggedInInside">
+
+									</div>			
+									<button onclick="userLogOut()"> Sign out </button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -137,55 +148,33 @@
 					 
               <div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
-                            <p id="errormessage">&nbsp</p>
-                         <form method="post" class="form-horizontal" enctype="multipart/form-data" name="regform">
-                            <div class="form-group">
-                            <label class="col-sm-1 control-label">Username<span style="color:red">*</span></label>
-                            <div class="col-sm-5">
-                            <input id="name" type="text" name="name" class="form-control" onkeyup="checkUsername()" required>
-                            </div>
-                            <label class="col-sm-1 control-label">Email<span style="color:red">*</span></label>
-                            <div class="col-sm-5">
-                            <input id="email" type="text" name="email" class="form-control" onkeyup="checkMailStatus()" required>
-                            </div>
-                            </div>
 
-                            <div class="form-group">
-                            <label class="col-sm-1 control-label">Password<span style="color:red">*</span></label>
-                            <div class="col-sm-5">
-                            <input type="password" id="password" name="password" class="form-control" id="password" onkeyup='checkpassword();' required >
-                            </div>
+								<form>
+								  <label for="SUname">Name:</label><br>
+								  <input type="text" id="SUname" name="SUname"><br>
 
-                            <label class="col-sm-1 control-label">Confirm Password<span style="color:red">*</span></label>
-                            <div class="col-sm-5">
-                            <input type="password" id="password2" name="password2" class="form-control" onkeyup='checkpassword();' required>
-                            </div>
-                            </div>
+								  <label for="SUpass">Password:</label><br>
+								  <input type="password" id="SUpass" name="SUpass"><br><br>
 
-                             <div class="form-group">
-                            <label class="col-sm-1 control-label">Country<span style="color:red">*</span></label>
-                            <div class="col-sm-5">
-                            <select name="country" class="form-control" required>
-                            <option value="" hidden></option>
-                            <option value="Greece">Greece</option>
-                            <option value="Italy">Italy</option>
-                            </select>
-                            </div>
+								  <label for="SUpassConf">Confirm Password:</label><br>
+								  <input type="password" id="SUpassConf" name="SUpassConf"><br><br>
 
-                            <label class="col-sm-1 control-label">City<span style="color:red">*</span></label>
-                            <div class="col-sm-5">
-                            <input type="text" name="city" class="form-control" required>
-                            </div>
-                            </div>
+								  <label for="SUemail">Email:</label><br>
+								  <input type="text" id="SUemail" name="SUemail"><br><br>
 
-                             
+								  <label for="SUCountry">Country:</label><br>
+								  <input type="text" id="SUCountry" name="SUCountry"><br><br>
 
-								<br>
-                                <button id="submitbutton" class="btn btn-primary" name="submit" type="submit">Register</button>
-                                </form>
+								  <label for="SUCity">City:</label><br>
+								  <input type="text" id="SUCity" name="SUCity"><br><br>
+
+								  <button value="Register" onclick="userSignup();return false;">Register</button>
+								</form> 
+
+
                                 <br>
                                 <br>
-								<p>Already Have Account? <br><a type="button" class="btn btn-default" data-toggle="modal"
+								<p>Already Have Account? <br><a type="button" id="signInButton" class="btn btn-default" data-toggle="modal"
 								 data-target="#profileModal" data-dismiss="modal">Sign in</a></p>
 							</div>
 						

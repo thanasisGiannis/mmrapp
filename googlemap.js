@@ -48,19 +48,83 @@ var longpress = false;
 
 
 
+function userSignup(){
+
+
+			var name     = document.getElementById("SUname").value;
+			var password     = document.getElementById("SUpass").value;
+			var passConf = document.getElementById("SUpassConf").value;
+			var email     = document.getElementById("SUemail").value;
+			var country  = document.getElementById("SUCountry").value;
+			var city     = document.getElementById("SUCity").value;
+
+
+			if(password === passConf){
+
+				var jsonData = JSON.stringify({
+											 "name"     : name,
+											 "password" : password,
+											 "email"	   : email,
+											 "country"  : country,
+											 "city"	   : city
+											});
+
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+																if (this.readyState == 4 && this.status == 200) {
+																		//var userData = JSON.parse(this.responseText);
+																		var res = JSON.parse(this.responseText);
+
+																		if(res['error'] === "Success"){
+																				console.log(res);
+																				document.getElementById("username").value = name;
+																				document.getElementById("userpass").value = password;
+																				document.getElementById("username").innerHTML = name;
+																				document.getElementById("userpass").innerHTML = password;
+
+																				userLogInSubmit();
+																				document.getElementById("signInButton").click();
+																				//$('#profileModal').modal('toggle');
+
+																		}
+																		return false;
+																	
+																}
+														};
+
+
+				console.log("http://web.interreginvestment.eu/mmrp/signUpForm.php?data2b="+jsonData);
+				xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/signUpForm.php?data2b="+jsonData, true);
+				xmlhttp.send();
+
+			}
+			return false;
+
+}
+
+function userLogOut(){
+
+				
+			document.getElementById("noLoggedIn").style.display="block";
+			document.getElementById("LoggedIn").style.display="none";
+
+			document.getElementById("LoggedInInside").innerHTML="";
+			document.getElementById("userLoginLink").innerHTML="Login";
+
+			document.getElementById("username").value ="";
+			document.getElementById("userpass").value ="";
+
+			return false;
+}
+
 
 function userLogInSubmit(){
 /* user log in */
-
-//	console.log('hey1');
-//	return false;
-	var jslogin ='mobile';// document.getElementById("login").value;
 	var jsusername = document.getElementById("username").value;
 	var jsuserpass = document.getElementById("userpass").value;
 	
 
 	var jsonData = JSON.stringify({
-				 						 "login"   : jslogin,
 										 "email"   : jsusername,
 										 "password": jsuserpass
 										});
@@ -68,26 +132,29 @@ function userLogInSubmit(){
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-			console.log(this.responseText);
-			
+			var userData = JSON.parse(this.responseText);
+
+				
+			document.getElementById("noLoggedIn").style.display="none";
+			document.getElementById("LoggedIn").style.display="block";
+
+			document.getElementById("LoggedInInside").innerHTML="<p style='align:center'> <img src='./img/ic_profile.png'> <p>Hello " + userData.name +"! <br><br>"+userData.email + "</p><p>";
+			document.getElementById("userLoginLink").innerHTML=userData.name;
+
+			document.getElementById("username").value ="";
+			document.getElementById("userpass").value ="";
+
+			return false;
 		}
 	};
 
 
 	
-	console.log(jsonData);
 	xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/logInForm.php?data2b="+jsonData, true);
 	xmlhttp.send();
 
-/*
-	$.ajax({
-		   url: "https://www.investment.upatras.gr/mmrp/login.php",
-			type: "POST",
-			data:{login: jslogin, email: jsusername, password: jsuserpass}
-		 }).done(function(data) {
-		   console.log('hey');
-		 });
-*/
+
+
 	return false;
 }
 
