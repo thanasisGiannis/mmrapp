@@ -102,13 +102,17 @@
 				  <!-- Profile sign in Modal -->
 				  <div class="modal fade"  id="profileModal" role="dialog">
 					 <div class="modal-dialog">
-					 
-						<!-- Modal content-->
+					   <!-- Modal content-->
 						<div class="col-md-6 col-md-offset-3">
 						<!--h1 class="text-center text-bold mt-4x">Log in</h1-->
 						<div class="well row pt-2x pb-3x bk-light">
+						 	<button type="button" class="close" aria-label="Close" onclick='$("#profileModal").modal("hide");'>
+							  <span aria-hidden="true">&times;</span>
+							</button>
+
 							<div class="col-md-8 col-md-offset-2">
-								<! if not logged in>
+							
+							  <! if not logged in>
 							  <div id="noLoggedIn" style="display:block">
 							  <form method="post">
 									<label for="" class="text-uppercase text-sm">Email or Username</label>
@@ -130,7 +134,8 @@
 									<div id="LoggedInInside">
 
 									</div>			
-									<button onclick="userLogOut()"> Sign out </button>
+									<button class="btn btn-default" onclick="userLogOut()"> Log out </button>
+									<button class="btn btn-default" data-toggle="modal" data-target="#editProfileModal" data-dismiss="modal"> Edit Profile </button>
 								</div>
 							</div>
 						</div>
@@ -140,6 +145,33 @@
 
 
 
+				  <div class="modal fade"  id="editProfileModal" role="dialog">
+					 <div class="modal-dialog">
+				        <div class="hr-dashed"></div>
+							 	<button type="button" class="close" aria-label="Close" onclick='$("#editProfileModal").modal("hide");'>
+								  <span aria-hidden="true">&times;</span>
+								</button>
+
+								<div class="well row pt-2x pb-3x bk-light text-center">
+									<form>
+									  <label for="editname">Name:</label><br>
+									  <input type="text" id="editname" name="editname"><br>
+
+									  <label for="editemail">Email:</label><br>
+									  <input type="text" id="editemail" name="editemail"><br><br>
+
+									  <label for="editCity">City:</label><br>
+									  <input type="text" id="editCity" name="editCity"><br><br>
+
+									  <label for="editCountry">Country:</label><br>
+									  <input type="text" id="editCountry" name="editCountry"><br><br>
+
+									  <button value="Register" onclick="editProfileInfo();return false;">Register</button>
+									</form> 
+								</div>
+				 </div>
+				</div>
+			
 	
 				<! on submit call js function>
 				 <!-- Profile sign in Modal -->
@@ -331,36 +363,6 @@
 						</div>
 
 
-
-<!--
-						<div class="container" style="padding-top=3vh;background-color:#FFF; align-content: center;">
-						<h2 id="headDeparture">Departure</h2>
-						<form>
-							<label id="labelDateD" for="dateD">Date:</label>
-							<input type="date" id="dateD" name="dateD"
-									 min="2018-01-01" value="2020-02-01" max="2100-12-31" >
-
-							<label id="timeDateD" for="timeD">Time:</label>
-							<input type="time" id="timeD" name="timeD">
-
-						</form>
-						</div>
-
-
-						<div class="container" style="padding-top=2vh;background-color:#FFF; align-content: center;">
-						<h2 id="headArrival" >Arrival</h2>
-						<form>
-							<label id="labelDateA" for="dateA">Date:</label>
-							<input type="date" id="dateA" name="dateA"
-									 min="2018-01-01" max="2100-12-31">
-
-							<label id="timeDateA" for="timeA">Time:</label>
-							<input type="time" id="timeA" name="timeA">
-
-						</form>
-						</div>
-			 			
--->
 
 
 			<div class="container" style="padding-top=2vh;background-color:#FFF; align-content: center;">

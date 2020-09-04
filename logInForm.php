@@ -13,6 +13,7 @@ $email = $jsonData['email'];
 $password = $jsonData['password']; ;//password_hash($jsonData['password'],PASSWORD_DEFAULT);
 
 
+$_SESSION['id'] = -1;
 // Check connection
 if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
@@ -37,6 +38,7 @@ if (mysqli_num_rows($result) > 0) {
 		 $output['economic'] 			 = $row['economic'];
 		 $output['accessrouting'] 		 = $row['accessrouting'];
 		 $output['walking_constraint'] = $row['walking_constraint'];
+		 $_SESSION['id'] = $row['id'];
 
 	    echo json_encode($output);
 		 break;
@@ -48,8 +50,11 @@ if (mysqli_num_rows($result) > 0) {
 
 
 
-mysqli_close($conn);
-session_destroy();
+
+
+
+//mysqli_close($conn);
+//session_destroy();
 
 xdebug_stop_trace();
 

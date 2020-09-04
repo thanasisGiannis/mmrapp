@@ -33,16 +33,14 @@ var pointDinMap = false;
 var total_walk_travel_time=0; // total walking time in a route
 
 
-
 /* profile data */
-var userLoggedIn=false; // true or false if a user is logged in
 var userProfile; // raw data about user
 var userName;
 var userMail;
 var userCity;
 var userCountry;
-
-
+var maxWlkTm = 0;
+var loggedIn = false;
 
 var longpress = false;
 
@@ -114,9 +112,64 @@ function userLogOut(){
 			document.getElementById("username").value ="";
 			document.getElementById("userpass").value ="";
 
+
+
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+					console.log("user out");	
+					loggedIn=false;
+					return false;
+				}
+			};
+
+			if(loggedIn==true){
+				xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/logOutForm.php", true);
+				xmlhttp.send();
+			}
+
 			return false;
 }
 
+function editProfileInfo(){
+
+	var name = document.getElementById("editname").value;
+	var email = document.getElementById("editemail").value;
+	var city = document.getElementById("editCity").value;
+	var country = document.getElementById("editCountry").value;
+
+
+	var jsonData = JSON.stringify({
+										 "email"   : email,
+										 "name"    : name,
+										 "city"    : city,
+										 "country" : country
+										});
+
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText);
+			document.getElementById("LoggedInInside").innerHTML="<p style='align:center'> <img src='./img/ic_profile.png'> <p>Hello " + name +"! <br><br>"+email + "</p><p>";
+			document.getElementById("userLoginLink").innerHTML=name;
+
+			$("#editProfileModal").modal('hide');
+			$("#profileModal").modal('show');
+			return false;
+		}
+	};
+
+
+	if(loggedIn==true){
+		xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/editProfileInfo.php?data2b="+jsonData, true);
+		xmlhttp.send();
+	}
+
+
+	return false;
+
+
+}
 
 function userLogInSubmit(){
 /* user log in */
@@ -134,7 +187,7 @@ function userLogInSubmit(){
 	if (this.readyState == 4 && this.status == 200) {
 			var userData = JSON.parse(this.responseText);
 
-				
+			loggedIn=true;	
 			document.getElementById("noLoggedIn").style.display="none";
 			document.getElementById("LoggedIn").style.display="block";
 
@@ -144,15 +197,30 @@ function userLogInSubmit(){
 			document.getElementById("username").value ="";
 			document.getElementById("userpass").value ="";
 
+			document.getElementById("maxWalkTime").value =userData.walking_constraint;
+			maxWlkTm = document.getElementById("maxWalkTime").value;
+			document.getElementById("headMaxWalkTime").innerHTML = "Μaximum walking time: "+document.getElementById("maxWalkTime").value + "min";
+
+
+
+
+
+			document.getElementById("editname").value    = userData.name;
+			document.getElementById("editemail").value   = userData.email;
+			document.getElementById("editCity").value    = userData.city;
+			document.getElementById("editCountry").value = userData.country;
+
+
+
 			return false;
 		}
 	};
 
 
-	
-	xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/logInForm.php?data2b="+jsonData, true);
-	xmlhttp.send();
-
+	if(loggedIn==false){
+		xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/logInForm.php?data2b="+jsonData, true);
+		xmlhttp.send();
+	}
 
 
 	return false;
@@ -268,6 +336,7 @@ function setDefault(){
 
 	/* settings checkbox default */
 	/* ------------------------- */
+	maxWlkTm = 30;
 	document.getElementById("maxWalkTime").value="30";
 	document.getElementById("headMaxWalkTime").innerHTML = "Μaximum walking time: "+document.getElementById("maxWalkTime").value + "min";
 	/* ------------------------- */
@@ -323,7 +392,6 @@ function updateSettings(){
 	skip = [];
 	if(document.getElementById("vehicleBus").checked == false){
 		skip.push('bus');
-		console.log('bus unckecked');
 	}
 	if(document.getElementById("vehicleSubway").checked == false){
 		skip.push('subway');
@@ -361,8 +429,24 @@ function updateSettings(){
 
 	/* settings checkbox default */
 	/* ------------------------- */
-	//document.getElementById("maxWalkTime").value="30";
-	//document.getElementById("headMaxWalkTime").innerHTML = "Μaximum walking time: "+document.getElementById("maxWalkTime").value + "min";
+	var maxWalkTime = document.getElementById("maxWalkTime").value;
+	maxWlkTm = maxWalkTime;
+	var jsonData = JSON.stringify({
+										 "walking_constraint": maxWalkTime
+										});
+
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText);
+			return false;
+		}
+	};
+
+
+	xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/updateWalkTimeDB.php?data2b="+jsonData, true);
+	xmlhttp.send();
+
 	/* ------------------------- */
 
 	queryRoute();
@@ -1003,14 +1087,12 @@ function removeDirections(){
 
 
 
-function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,legNum){
+function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,legNum,total_walk_travel_time){
 
 		var imgSrc = "";
 
 		/* */
 		
-
-
 	   leaveTime = toDate(leaveTime);
 		arrivalTime = toDate(arrivalTime);
 		arrivalTimeE = toDate(arrivalTimeE);
@@ -1042,13 +1124,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 										 "\nTravel Time: "+ outputwalk_time + 
 										 "\nDistance: "+distance;
 
-			/*
-			var maxWalkTime = document.getElementById("maxWalkTime").value;
-			maxWalkTime = maxWalkTime*60;
-			if(maxWalkTime < total_walk_travel_time){
-				imageNode.style.backgroundColor = "red";
-			}
-			*/
+			
 			imgSrc = './img/walk3ar.png';
 		}else if ( !testing &&  type === "bus" ){
 			//var desc = "Dromologio Tade";
@@ -1099,12 +1175,12 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 								 "\nDistance: "+distance;
 			imgSrc = './img/trolleybusar.png';
 	   }else{
-			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination:" + distance;
-			imgSrc = undefined;
+			outputMessage = "Total Time: " + outputtravel_time + "\nTotal Distance: " + distance + "    ";
+			imgSrc = './img/icons8_route.png';
 		}
 
 
-
+	
 
 
 	imageNode.src  = imgSrc;
@@ -1126,7 +1202,42 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 	}
 
 	spanNode.id = 'directionsID' + legNum;
+	if(legNum == -1){
+//		textnode.style.textAlign = "left";
+//		textnode.style.display = "inline-block";
+//		textnode.style.float   = "left";
+	}
 	spanNode.appendChild(textnode);
+
+	if(legNum == -1){
+
+				var img =  document.createElement('img');
+				if(total_walk_travel_time > maxWlkTm){
+					img.src = "./img/walkintTimeNotOk.png";
+				}else{
+					img.src = "./img/walkingTimeOk.png";
+
+				}
+
+//				img.src="./img/walkingTimeOk.png";
+//				img.style.width="2vw";
+//				img.style.height="4vh";
+/*
+				img.style.paddingTop = "2px";
+				
+
+				if(total_walk_travel_time > maxWlkTm){
+					img.style.backgroundColor="red";
+
+				} else {
+					img.style.backgroundColor="green";
+				}
+				img.style.display= "inline-block";
+				img.style.float  = "right";
+*/
+				spanNode.appendChild(img);
+
+	}
 
 
 	var nodeInfo = document.createElement("pre");
@@ -1141,7 +1252,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 
 	var node;
-	if(imgSrc == undefined){
+	if(imgSrc == './img/icons8_route.png'){
 		//node  = document.createElement('pre');
 		node  = document.createElement('button');
 
@@ -1298,7 +1409,7 @@ function queryRoute(){
 	var totalTimeTravel = jsonRoutes.routes[j].travel_time;
 	var totalDistanceTravel = jsonRoutes.routes[j].distance;
 	//alert(totalTimeTravel);
-	addDirections("total","","","","","","","", totalDistanceTravel, totalTimeTravel, "",-1);
+
 
 	/* find total walking time of the route */
 	total_walk_travel_time=0;
@@ -1313,6 +1424,9 @@ function queryRoute(){
 
 
 	}
+	total_walk_travel_time=total_walk_travel_time/60;
+	addDirections("total","","","","","","","", totalDistanceTravel, totalTimeTravel, "",-1,total_walk_travel_time);
+
 	for(var i=0; i<numIter; i++){
 		var route = jsonRoutes.routes[j].legs[i].coordinates;
 		var type  = jsonRoutes.routes[j].legs[i].type;
@@ -1356,7 +1470,7 @@ function queryRoute(){
 		/* + street,arrivalTime,leaveTime,waitTime */
 		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE,type,StartEnd);
 
-		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,i);
+		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,i,-1);
 		/* add desc, distance, travel_time, walk_time */
 	}
 
@@ -1586,17 +1700,11 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("transPrefHeader").style.zoom = "1";
 		document.getElementById("headMaxWalkTime").style.zoom = "1";
 		document.getElementById("headRoutesCheckBox").style.zoom = "1";
-		//document.getElementById("headDeparture").style.zoom = "1";
-		//document.getElementById("headArrival").style.zoom = "1";
-
-		//document.getElementById("labelDateD").style.display = "";
-		//document.getElementById("timeDateD").style.display = "";
-		//document.getElementById("labelDateA").style.display = "";
-		//document.getElementById("timeDateA").style.display = "";
 		/* --------------------- */
 
 
 		document.getElementById("map").className = "col-sm-9";
+
 		document.getElementById("map").style.height = "75vh";//0.9*sheight + "px";//"75vh";
 		document.getElementById("map").style.maxWidth = "75vw";//0.9*sheight + "px";//"75vh";
 
