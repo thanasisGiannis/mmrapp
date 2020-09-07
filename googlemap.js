@@ -471,34 +471,8 @@ function myPositionInMap(position) {
 	slat = position.coords.latitude;
 	slon = position.coords.longitude;
 
-//	slat = 38.2466036;
-//	slon = 21.7361790;
-
 	var route = [];
 	route.push({lat: slat, lng: slon});
-
-
-/*
-	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=slat,slon&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
-
-	var HttpreqGoogleS = new XMLHttpRequest(); // a new request
-	HttpreqGoogleS.open("GET",googleURL1,false);
-	HttpreqGoogleS.send();
-
-	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
-	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
-	var markerS = new google.maps.Marker({
-			 position: route[0],
-			 map: localmap,
-			title: messageS
-		 });
-
-
-	document.getElementById("spoint").value=messageS;
-	document.getElementById("spoint").placeholder=messageS;
-*/
-
-
 
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
@@ -556,54 +530,6 @@ function sPointSetMenu(){
 	console.log("sending to google: " + latLng);
 
 
-/*
-	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
-
-	var HttpreqGoogleS = new XMLHttpRequest(); // a new request
-	HttpreqGoogleS.open("GET",googleURL1,false);
-	HttpreqGoogleS.send();
-
-
-	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
-
-	//console.log(HttpreqGoogleS.responseText);
-
-	if(contextMenuSpoint!=undefined){
-		contextMenuSpoint.setMap(null);
-	}
-
-	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
-	var markerS = new google.maps.Marker({
-			 position: contextLatLng,
-			 map: localmap,
-			 icon:'./img/start.png',
-			title: messageS
-		 });
-
-	globalMarkerMap.push(markerS);
-
-	contextMenuSpoint=markerS;
-
-	document.getElementById("spoint").value=messageS;
-	document.getElementById("spoint").placeholder=messageS;
-
-	console.log("Before spoint: "+latLng);
-
-	console.log("spoint: " +  document.getElementById("spoint").value);
-	latLng[0].replace(" ","");
-	latLng[1].replace(" ","");
-
-	slat = Number(latLng[0]);
-	slon = Number(latLng[1]);
-		
-	if(pointDinMap == true){
-		updateRoute(spoint,epoint);
-		//updateRouteFromContextMenu(slat,slon,dlat,dlon);
-		pointSinMap = true;
-	}else{
-		pointSinMap = true;
-	}
-*/
 
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
@@ -670,52 +596,6 @@ function dPointSetMenu(){
 	var dest = latLng;
 
 	latLng = latLng.split(",");
-	//console.log(latLng);
-
-
-/*
-	var googleURL1 = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
-
-	var HttpreqGoogleS = new XMLHttpRequest(); // a new request
-	HttpreqGoogleS.open("GET",googleURL1,false);
-	HttpreqGoogleS.send();
-	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
-
-	//console.log(HttpreqGoogleS.responseText);
-
-	if(contextMenuDpoint!=undefined){
-		contextMenuDpoint.setMap(null);
-	}
-
-
-	var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
-	var markerS = new google.maps.Marker({
-			 position: contextLatLng,
-			 map: localmap,
-			 icon:'./img/end.png',
-			title: messageS
-		 });
-
-	globalMarkerMap.push(markerS);
-	contextMenuDpoint=markerS;
-
-	document.getElementById("epoint").value=messageS;
-	document.getElementById("epoint").placeholder=messageS;
-
-	latLng[0].replace(" ","");
-	latLng[1].replace(" ","");
-	dlat = Number(latLng[0]);
-	dlon = Number(latLng[1]);
-	if(pointSinMap == true){
-		console.log(latLng);
-		updateRoute(spoint,epoint);
-		pointDinMap = true;
-	}else{
-		pointDinMap = true;
-	}
-*/
-
-
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
@@ -958,35 +838,6 @@ function updateRoute(spoint,epoint){
 		alert('Please type Starting Point and Destination');
 		return;
 	}
-
-/*
-	var googleURL = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I';
-
-	var googleURL1 = googleURL + '&address=' + spoint.value;
-	var googleURL2 = googleURL + '&address=' + epoint.value;
-
-
-	var HttpreqGoogleS = new XMLHttpRequest(); // a new request
-	HttpreqGoogleS.open("GET",googleURL1,false);
-	HttpreqGoogleS.send();
-
-	var HttpreqGoogleE = new XMLHttpRequest(); // a new request
-	HttpreqGoogleE.open("GET",googleURL2,false);
-	HttpreqGoogleE.send();
-
-	var jsonSpoint = JSON.parse(HttpreqGoogleS.responseText);
-	var jsonEpoint = JSON.parse(HttpreqGoogleE.responseText);
-	
-	slat = jsonSpoint.results[0].geometry.location.lat;
-	console.log("FROM UPDATEROUTE " + slat);
-	slon = jsonSpoint.results[0].geometry.location.lng;
-
-	dlat = jsonEpoint.results[0].geometry.location.lat;
-	dlon = jsonEpoint.results[0].geometry.location.lng;
-
-	queryRoute();
-
-*/
 
 
 	var xmlhttp = new XMLHttpRequest();
@@ -1451,25 +1302,6 @@ function queryRoute(){
 	console.log(inputHttp);
 	var mmrappReq = Url + '?' + inputHttp;
 
-/*
-	var Httpreq = new XMLHttpRequest(); // a new request
-	Httpreq.open("GET",mmrappReq,false);
-	Httpreq.send();
-
-	var jsonRoutes = JSON.parse(Httpreq.responseText);
-
-	var success = jsonRoutes.header.success;
-	
-	if (success==0){
-
-		alert('No route');
-		return false;
-	}
-
-
-	queryRoute_(jsonRoutes);
-*/
-
 
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
@@ -1828,11 +1660,12 @@ function cssDeviceChange( swidth,sheight){
 
 		document.getElementById("map").className = "col-sm-9";
 
-		document.getElementById("map").style.height = "75vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("map").style.height = "73vh";//0.9*sheight + "px";//"75vh";
 		document.getElementById("map").style.maxWidth = "75vw";//0.9*sheight + "px";//"75vh";
 		document.getElementById("map").style.width = swidth-buttonW +'px';
 
-		document.getElementById("mmrpHEADGLOBAL").style.zoom="1";
+		document.getElementById("mmrpHEADGLOBAL").style.zoom="0.5";
+		document.getElementById("mmrpHEADGLOBAL").style.maxHeight="19vh";
 
 
 
@@ -1857,7 +1690,7 @@ function cssDeviceChange( swidth,sheight){
 				document.getElementById("directionsID"+j).style.fontSize = "12px";
 			}		
 		}
-		document.getElementById("directions").style.maxHeight = "56.5vh";//0.9*sheight + "px";//"75vh";
+		document.getElementById("directions").style.maxHeight = "51.4vh";//0.9*sheight + "px";//"75vh";
 
 	}
 
