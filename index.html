@@ -100,7 +100,7 @@
 
 
 				  <!-- Profile sign in Modal -->
-				  <div class="modal fade"  id="profileModal" role="dialog">
+				  <div class="modal"  id="profileModal" role="dialog">
 					 <div class="modal-dialog">
 					   <!-- Modal content-->
 						<div class="col-md-6 col-md-offset-3">
@@ -135,7 +135,9 @@
 
 									</div>			
 									<button class="btn btn-default" onclick="userLogOut()"> Log out </button>
-									<button class="btn btn-default" data-toggle="modal" data-target="#editProfileModal" data-dismiss="modal"> Edit Profile </button>
+									<button class="btn btn-default" data-toggle="modal" data-target="#editProfileModal" data-dismiss="modal">
+											 Edit Profile
+									</button>
 								</div>
 							</div>
 						</div>
@@ -145,13 +147,13 @@
 
 
 
-				  <div class="modal fade"  id="editProfileModal" role="dialog">
-					 <div class="modal-dialog">
+				 <div class="modal"  id="editProfileModal" role="dialog">
+					<div class="modal-dialog">
 				        <div class="hr-dashed"></div>
 							 	<button type="button" class="close" aria-label="Close" onclick='$("#editProfileModal").modal("hide");'>
 								  <span aria-hidden="true">&times;</span>
 								</button>
-
+							 
 								<div class="well row pt-2x pb-3x bk-light text-center">
 									<form>
 									  <label for="editname">Name:</label><br>
@@ -169,18 +171,20 @@
 									  <button value="Register" onclick="editProfileInfo();return false;">Register</button>
 									</form> 
 								</div>
-				 </div>
+					</div>
 				</div>
-			
 	
 				<! on submit call js function>
 				 <!-- Profile sign in Modal -->
-				  <div class="modal fade"  id="createProfileModal" role="dialog">
-					 <div class="modal-dialog">
-					 
-              <div class="hr-dashed"></div>
+				<div class="modal"  id="createProfileModal" role="dialog">
+					<div class="modal-dialog">
+              		<div class="hr-dashed"></div>
 						<div class="well row pt-2x pb-3x bk-light text-center">
 
+	 				   <!button type="button" class="close" aria-label="Close" onclick='document.getElementById("signInButton").click();$("#profileModal").modal("hide");'>
+					   <button type="button" class="close" aria-label="Close" onclick='$("#createProfileModal").modal("hide");'>
+							  <span>&times;</span>
+					   </button>
 								<form>
 								  <label for="SUname">Name:</label><br>
 								  <input type="text" id="SUname" name="SUname"><br>
@@ -206,13 +210,15 @@
 
                                 <br>
                                 <br>
-								<p>Already Have Account? <br><a type="button" id="signInButton" class="btn btn-default" data-toggle="modal"
-								 data-target="#profileModal" data-dismiss="modal">Sign in</a></p>
-							</div>
-						
-
-
-				 </div>
+								<p>Already Have Account? <br>
+								<button class="btn btn-default" data-toggle="modal" data-target="#profileModal" data-dismiss="modal"> Sign in </button>
+		
+								<!a type="button" id="signInButton" class="btn btn-default" data-toggle="modal"
+										 								  data-target="#profileModal" data-dismiss="modal">
+																		<!/a>
+								</p>
+						</div>
+					</div>
 				</div>
 
 				

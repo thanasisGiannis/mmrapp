@@ -1175,7 +1175,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 								 "\nDistance: "+distance;
 			imgSrc = './img/trolleybusar.png';
 	   }else{
-			outputMessage = "Total Time: " + outputtravel_time + "\nTotal Distance: " + distance + "    ";
+			outputMessage = "Total Time: " + outputtravel_time + "\nTotal Distance:" + distance + "    ";
 			imgSrc = './img/icons8_route.png';
 		}
 
@@ -1202,11 +1202,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 	}
 
 	spanNode.id = 'directionsID' + legNum;
-	if(legNum == -1){
-//		textnode.style.textAlign = "left";
-//		textnode.style.display = "inline-block";
-//		textnode.style.float   = "left";
-	}
 	spanNode.appendChild(textnode);
 
 	if(legNum == -1){
@@ -1219,22 +1214,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 				}
 
-//				img.src="./img/walkingTimeOk.png";
-//				img.style.width="2vw";
-//				img.style.height="4vh";
-/*
-				img.style.paddingTop = "2px";
-				
-
-				if(total_walk_travel_time > maxWlkTm){
-					img.style.backgroundColor="red";
-
-				} else {
-					img.style.backgroundColor="green";
-				}
-				img.style.display= "inline-block";
-				img.style.float  = "right";
-*/
 				spanNode.appendChild(img);
 
 	}
@@ -1242,7 +1221,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 	var nodeInfo = document.createElement("pre");
 
-//	nodeInfo.appendChild(textnode);      
 	nodeInfo.appendChild(spanNode);      
 
 	nodeInfo.style.float = "center";
@@ -1253,7 +1231,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 
 	var node;
 	if(imgSrc == './img/icons8_route.png'){
-		//node  = document.createElement('pre');
 		node  = document.createElement('button');
 
 		node.onclick = function(){
@@ -1275,7 +1252,6 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 		node.appendChild(imageNode);
 	}
 	node.appendChild(nodeInfo);
-//	node.appendChild(textnode);
 
 	document.getElementById("directions").appendChild(node);
 
@@ -1689,7 +1665,7 @@ function cssDeviceChange( swidth,sheight){
 			document.getElementById("buttonsID").style.maxWidth = "450px";
 		}
 		var buttonW = parseInt(document.getElementById("buttonsID").style.width, 10);
-		document.getElementById("map").style.width = swidth-buttonW +'px';
+		//document.getElementById("map").style.width = swidth-buttonW +'px';
 		
 		document.getElementById("routeNum").style.maxWidth = "450px";
 
@@ -1707,6 +1683,7 @@ function cssDeviceChange( swidth,sheight){
 
 		document.getElementById("map").style.height = "75vh";//0.9*sheight + "px";//"75vh";
 		document.getElementById("map").style.maxWidth = "75vw";//0.9*sheight + "px";//"75vh";
+		document.getElementById("map").style.width = swidth-buttonW +'px';
 
 		document.getElementById("mmrpHEADGLOBAL").style.zoom="1";
 
