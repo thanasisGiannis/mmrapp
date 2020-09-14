@@ -1595,13 +1595,7 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("transPrefHeader").style.zoom = "0.7";
 		document.getElementById("headMaxWalkTime").style.zoom = "0.7";
 		document.getElementById("headRoutesCheckBox").style.zoom = "0.7";
-		//document.getElementById("headDeparture").style.zoom = "0.7";
-		//document.getElementById("headArrival").style.zoom = "0.7";
-
-		//document.getElementById("labelDateD").style.display = "block";
-		//document.getElementById("timeDateD").style.display = "block";
-		//document.getElementById("labelDateA").style.display = "block";
-		//document.getElementById("timeDateA").style.display = "block";
+		document.getElementById("settingsDepArrDateTime").style.zoom = "0.7";
 		/* --------------------- */
 
 
@@ -1655,7 +1649,8 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("transPrefHeader").style.zoom = "1";
 		document.getElementById("headMaxWalkTime").style.zoom = "1";
 		document.getElementById("headRoutesCheckBox").style.zoom = "1";
-		/* --------------------- */
+		document.getElementById("settingsDepArrDateTime").style.zoom = "1";
+	/* --------------------- */
 
 
 		document.getElementById("map").className = "col-sm-9";
