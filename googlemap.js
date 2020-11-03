@@ -654,12 +654,155 @@ function dPointSetMenu(){
 	return false;
 }
 
+function initMap(){
+
+	var url = 'http://mmrp.interreginvestment.eu/pegasus/map/tiles/12/2295/1576.png';
+	var img = new Image();
+	img.src = url;
+
+	img.onload = function()
+	{
+		// If the server is up, do this.
+		initMapOpenStreet();
+	}
+
+	img.onerror = function()
+	{
+		// If the server is down, do that.
+		initMapGoogle();
+	}
+
+
+
+	return false;
+}
+
+
+function initMapGoogle(){
+
+	/* google maps */
+	
+	localmap = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: {lat: 38.246639, lng: 21.734573},
+        });
+
+/*
+	localmap.mapTypes.set("OSM", new google.maps.ImageMapType({
+                getTileUrl: function(coord, zoom) {
+                    // See above example if you need smooth wrapping at 180th meridian
+              		  return "http://mmrp.interreginvestment.eu/pegasus/map/tiles/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+                },
+                tileSize: new google.maps.Size(256, 256),
+                name: "OpenStreetMap",
+                maxZoom: 18
+            }));
+*/
+
+		localmap.addListener('rightclick', function(e) {
+
+
+		contextLatLng = e.latLng;
+	
+		var menuBox = document.getElementById("contextGoogleMapsMenu");
+		var localmap = document.getElementById("map");		
+
+		var menuBoxWidth = menuBox.style.width;
+		menuBoxWidth = parseInt(String(menuBoxWidth).replace('px',''));
+
+
+		var menuBoxHeight = menuBox.style.height;
+		menuBoxHeight = parseInt(String(menuBoxHeight).replace('px',''));
+		
+
+
+		var Xpos = parseInt(localmap.getBoundingClientRect().left + e.pixel.x);
+		var Ypos  = parseInt(localmap.getBoundingClientRect().top  + e.pixel.y);
+
+		var Xpos2 = Xpos;
+		var Ypos2 = Ypos;
+
+		if(Xpos  > localmap.getBoundingClientRect().right/2){
+			Xpos2 = (Xpos - menuBoxWidth);
+		}
+
+		if(Ypos  > localmap.getBoundingClientRect().bottom/2){
+			Ypos2 = Ypos2 - menuBoxHeight;
+		}
+
+		menuBox.style.left = Xpos2  + "px";
+		menuBox.style.top  = Ypos2  + "px";
+	
+		menuBox.style.display = "block";
+		contextMenuDisplayed = true;
+ 
+
+	});
+
+
+	localmap.addListener("click", function (e)
+	{
+			var timeOutSuccess = false;
+			if(contextMenuDisplayed == false){
+				setTimeout(function(){
+					  
+								contextLatLng = e.latLng;
+							
+								var menuBox = document.getElementById("contextGoogleMapsMenu");
+								var localmap = document.getElementById("map");		
+
+								var menuBoxWidth = menuBox.style.width;
+								menuBoxWidth = parseInt(String(menuBoxWidth).replace('px',''));
+
+
+								var menuBoxHeight = menuBox.style.height;
+								menuBoxHeight = parseInt(String(menuBoxHeight).replace('px',''));
+								
+
+
+								var Xpos = parseInt(localmap.getBoundingClientRect().left + e.pixel.x);
+								var Ypos  = parseInt(localmap.getBoundingClientRect().top  + e.pixel.y);
+
+								var Xpos2 = Xpos;
+								var Ypos2 = Ypos;
+
+								if(Xpos  > localmap.getBoundingClientRect().right/2){
+									Xpos2 = (Xpos - menuBoxWidth);
+								}
+
+								if(Ypos  > localmap.getBoundingClientRect().bottom/2){
+									Ypos2 = Ypos2 - menuBoxHeight;
+								}
+
+								menuBox.style.left = Xpos2  + "px";
+								menuBox.style.top  = Ypos2  + "px";
+							
+								menuBox.style.display = "block";
+								contextMenuDisplayed = true;
+								timeOutSuccess = true;
+					
+				 }, 1000);
+			}
+
+		if (contextMenuDisplayed == true)
+	 	{
+  			 contextMenuDisplayed = false;
+	  		 var menuBox = document.getElementById("contextGoogleMapsMenu");
+			 menuBox.style.display = "none";
+		}
+
+	});
+
+	return false;
+}
+
 
 // Initialize Map
-function initMap() {
+function initMapOpenStreet() {
 
-/* OpenStreet Map */
 
+
+	/* OpenStreet Map */
 	localmap = new google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {lat: 38.246639, lng: 21.734573},
@@ -677,7 +820,8 @@ function initMap() {
                 maxZoom: 18
             }));
 
-	localmap.addListener('rightclick', function(e) {
+
+		localmap.addListener('rightclick', function(e) {
 
 
 		contextLatLng = e.latLng;
@@ -990,15 +1134,40 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 	}
 
 
-	var polyMap = new google.maps.Polyline({
-          path: route,
-          geodesic: true,
-          strokeColor:color,
-          strokeOpacity: 1.0,
-          strokeWeight: 5
+	var polyMap;
+	
+	if(colorMod == 'walk'){
+	
+		const lineSymbol = {
+								 path: "M 0,-1 0,1",
+								 strokeOpacity: 1,
+								 scale: 4,
+			  		          strokeWeight: 5
+							  };
+	
+		polyMap = new google.maps.Polyline({
+          	path: route,
+          	strokeColor:color,
+				strokeOpacity: 0,
+					 icons: [
+						{
+						  icon: lineSymbol,
+						  offset: "0",
+						  repeat: "30px",
+						},
+					 ],
         });
 
+	}else{
+		polyMap = new google.maps.Polyline({
+		       path: route,
+		       geodesic: true,
+		       strokeColor:color,
+		       strokeOpacity: 1.0,
+		       strokeWeight: 5
+		     });
 
+	}
  	
 	if(putMarkers){
 /*
@@ -1150,7 +1319,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 								 "\nDistance: "+distance;
 			imgSrc = './img/trolleybusar.png';
 	   }else{
-			outputMessage = "Total Time: " + outputtravel_time + "\nTotal Distance:" + distance + "\n" +"Dept.Time: " + arrivalTime + "\nArr.Time: " + leaveTime + "  \n";
+			outputMessage = "Dept.Time: " + arrivalTime + " | Arr.Time: " + leaveTime +"\nTotal Time: " + outputtravel_time + "\nTotal Distance:" + distance + "\n" +"  \n";
 			imgSrc = './img/icons8_route.png';
 		}
 
