@@ -19,6 +19,7 @@ var obj;//  = 'multi';
 var skip ;//= ['bus'];//x=  ['tram'];//['bus']; // checkbox
 var globalPolyMap=[];
 var globalMarkerMap=[];
+var jsonRoutesGlobal;
 
 var lineExists = 0;
 var mainRoute=0;
@@ -49,12 +50,12 @@ var longpress = false;
 function userSignup(){
 
 
-			var name     = document.getElementById("SUname").value;
-			var password     = document.getElementById("SUpass").value;
-			var passConf = document.getElementById("SUpassConf").value;
+			var name      = document.getElementById("SUname").value;
+			var password  = document.getElementById("SUpass").value;
+			var passConf  = document.getElementById("SUpassConf").value;
 			var email     = document.getElementById("SUemail").value;
-			var country  = document.getElementById("SUCountry").value;
-			var city     = document.getElementById("SUCity").value;
+			var country   = document.getElementById("SUCountry").value;
+			var city      = document.getElementById("SUCity").value;
 
 
 			if(password === passConf){
@@ -71,6 +72,7 @@ function userSignup(){
 				xmlhttp.onreadystatechange = function() {
 																if (this.readyState == 4 && this.status == 200) {
 																		//var userData = JSON.parse(this.responseText);
+																		console.log(this.responseText);
 																		var res = JSON.parse(this.responseText);
 
 																		if(res['error'] === "Success"){
@@ -231,7 +233,13 @@ function changeRoute(routeNum){
 //	alert(routeNum.value);
 
 	mainRoute=routeNum.value;
-	queryRoute();
+
+	
+//	if(obj == 'multi'){
+		queryRoute_(jsonRoutesGlobal);
+//	}else{
+//		queryRoute();
+//	}
 	return false;
 
 }
@@ -250,7 +258,9 @@ function updateMod(modButton){
 	
 	mainRoute=0;
 	mod = modButton;
+
 	queryRoute();
+
 	return false;	
 }
 
@@ -664,7 +674,7 @@ function initMap() {
                 },
                 tileSize: new google.maps.Size(256, 256),
                 name: "OpenStreetMap",
-                maxZoom: 17
+                maxZoom: 18
             }));
 
 	localmap.addListener('rightclick', function(e) {
@@ -907,16 +917,16 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 
 	switch(colorMod) {
 	  case 'car':
-		color='#66bb6a';
+		color='#026e07';
 		break;
 	  case 'rail':
 		color='#607D8B';
 		break;
 	  case 'walk':
-		color='#607D8B';
+		color='#1d7cbf';
 		break;
 	  case 'pubcar':
-		color='#607D8B';
+		color='#68e36d';
 		break;
 	  case '':
 		color='#202020';
@@ -955,7 +965,7 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 			imgSrcS = './img/trolleybus.png';
 			imgSrcE = '';
 	   }else{
-			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination:" + distance;
+			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination: " + distance;
 //			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
 			imgSrc = undefined;
 		}
@@ -1066,8 +1076,8 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 		walk_time = Number(walk_time);
 		var h = Math.floor(walk_time / 3600);
 		var m = Math.floor(walk_time % 3600 / 60);
-		var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours") : "";
-		var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes") : "";
+		var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours ") : "";
+		var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes ") : "";
 		var outputwalk_time =  hDisplay + mDisplay; 
 
 		
@@ -1140,7 +1150,7 @@ function addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arriva
 								 "\nDistance: "+distance;
 			imgSrc = './img/trolleybusar.png';
 	   }else{
-			outputMessage = "Total Time: " + outputtravel_time + "\nTotal Distance:" + distance + "    ";
+			outputMessage = "Total Time: " + outputtravel_time + "\nTotal Distance:" + distance + "\n" +"Dept.Time: " + arrivalTime + "\nArr.Time: " + leaveTime + "  \n";
 			imgSrc = './img/icons8_route.png';
 		}
 
@@ -1285,8 +1295,13 @@ function queryRoute(){
 
 	console.log("To Backend " + slat + " " + dlat);
 
-	var Url = 'http://150.140.143.218:8000/getJourneys/';
+	var Url = 'http://mmrp.interreginvestment.eu:8000/getRoute/';
 	
+
+	/* */
+//	if(mod == 'pc' || mod == "cp" || mod == "cpc"){
+	obj = 'multi';
+//	}
 	var inputHttp =      "lg="+lg
 						+"&"+"slat="+slat
 						+"&"+"slon="+slon
@@ -1302,10 +1317,12 @@ function queryRoute(){
 	console.log(inputHttp);
 	var mmrappReq = Url + '?' + inputHttp;
 
+	
 
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
+				queryLeg = undefined;
 				var jsonRoutes = JSON.parse(this.responseText);
 				var success = jsonRoutes.header.success;
 				
@@ -1315,9 +1332,19 @@ function queryRoute(){
 					return false;
 				}
 
-
+				jsonRoutesGlobal = jsonRoutes;
 				queryRoute_(jsonRoutes);
 
+				var tmpEaObj =  document.getElementById("eaCheckBox");
+				var tmpLdObj =  document.getElementById("ldCheckBox");
+				if(tmpEaObj.checked == true){
+					obj  = 'ea'; 
+				}
+				if(tmpLdObj.checked == true){
+					obj  = 'minTran';
+				}
+
+			
 			return false;
 		}
 	};
@@ -1380,7 +1407,11 @@ function queryRoute_(jsonRoutes){
 
 	}
 	total_walk_travel_time=total_walk_travel_time/60;
-	addDirections("total","","","","","","","", totalDistanceTravel, totalTimeTravel, "",-1,total_walk_travel_time);
+	
+	/* 3rd and 4th input are departure time and arrival time */
+	var deptTime = jsonRoutes.routes[j].legs[0].extra_data[0][1];
+	var arrTime  = jsonRoutes.routes[j].legs[numIter-1].extra_data[jsonRoutes.routes[j].legs[numIter-1].extra_data.length-1][1];
+	addDirections("total","",deptTime,arrTime,"","","","", totalDistanceTravel, totalTimeTravel, "",-1,total_walk_travel_time);
 
 	for(var i=0; i<numIter; i++){
 		var route = jsonRoutes.routes[j].legs[i].coordinates;
@@ -1425,6 +1456,9 @@ function queryRoute_(jsonRoutes){
 		/* + street,arrivalTime,leaveTime,waitTime */
 		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE,type,StartEnd);
 
+		if(type == "total"){
+				console.log("Arr " + arrivalTime + " Leave " + leaveTime);
+		}
 		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,i,-1);
 		/* add desc, distance, travel_time, walk_time */
 	}
@@ -1561,8 +1595,10 @@ function queryRoute_(jsonRoutes){
 		 latlngbounds.extend(latlngb[i]);
 	}
 	localmap.fitBounds(latlngbounds);
+	
 	queryLeg = jsonRoutes.routes[j].legs;
 
+	console.log(jsonRoutes);
 	return false;	
 }
 
@@ -1660,8 +1696,8 @@ function cssDeviceChange( swidth,sheight){
 		document.getElementById("map").style.width = swidth-buttonW +'px';
 
 		document.getElementById("mmrpHEADGLOBAL").style.zoom="0.5";
-		document.getElementById("mmrpHEADGLOBAL").style.maxHeight="19vh";
-
+		document.getElementById("mmrpHEADGLOBAL").style.minHeight="19vh";
+		document.getElementById("mmrpHEADGLOBAL").style.scale = "1.0";
 
 
 		if( document.getElementById("directions1") != null){

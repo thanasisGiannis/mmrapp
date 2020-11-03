@@ -34,11 +34,11 @@
 				<a href="javascript:function() { return false; }" >Language </a> |
 				<!--a href="" >MMRP Evaluation</a> |
 				<a href="" >Report a bug</a--> 
-				<a href="https://docs.google.com/forms/d/e/1FAIpQLSeHw6c5e5G1jlY3qTyjCWz1jxlOg2titGzOeC-1GFQRkhtaoQ/closedform?fbclid=IwAR3CrFTOcV0EV7n3OXf_t5IXjplNgLqaViuSAmI5_VR36ewXH-7zzl9BAyw">
+				<a href="https://docs.google.com/forms/d/e/1FAIpQLScqv2X7s0el8Ui4h2uuf4cfHBacKfODRI0Z5LHDH44hZ-_t2A/viewform">
 					MMRP Evaluation</a> |
 				<a href="https://www.interreginvestment.eu/investment-mmr-bug-report/?fbclid=IwAR3CrFTOcV0EV7n3OXf_t5IXjplNgLqaViuSAmI5_VR36ewXH-7zzl9BAyw" >Report a bug</a> |
 				<a href="mailto:investment-info@ceid.upatras.gr?subject=INVESTMENT MMRP - Feedback&body=Hello, my comments about the APP are the following">Feedback</a>
-
+				<!/p>
 				<! buttons>
 				<div class="btn-group btn-group-lg">
 					<button id='trainButton' type="button" class="btn btn-primary" style="background-color:#d8d8d8;z-index:0;"><img src="./img/rail.png" alt='Public' width="30px" height="30px"></button>
@@ -70,7 +70,8 @@
 							 <h4 class="modal-title">Which route legs do you wish to be connected with car directions?</h4>
 						  </div>
 						  <div class="modal-body">
-								<form id="buttonCheckBox">
+								<!form id="buttonCheckBox">
+								<form>
 									<input type='radio' class='radio-button' id="tmpmod1" name="tmpmod" value="pc">
 										<label for="tmpmod1"> Last Leg </label><br>
 									<input type='radio' class='radio-button' id="tmpmod2" name="tmpmod" value="cpc">
@@ -253,7 +254,6 @@
 
 												resetButtonColor();
 												document.getElementById("hybridButton").style.backgroundColor="#034200";
-
 												if(tmpmod1.checked)
 													updateMod('pc'); 
 
@@ -359,7 +359,8 @@
 
 						<div class="container" style="padding-top=3vh;align=center;background-color:#FFF; align-content: center;">
 						<h2 id="headRoutesCheckBox">Routes</h2>
-						<form id="buttonCheckBox">
+						<!form id="buttonCheckBox">
+						<form>
 						  <input checked type='radio' class='radio-button' name="routesCheckBox" value="eaCheckBox" id="eaCheckBox">
 						  <label for="eaChecked">Earliest Arrival</label><br>
 						  <input type='radio' class='radio-button' name="routesCheckBox" value="ldCheckBox" id="ldCheckBox">
