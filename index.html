@@ -10,7 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
  	 <!script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"><!/script>
 	 <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I&libraries=places"></script>
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM&libraries=places"></script>
     <script src="./googlemap.js"></script>
 	 <link rel="stylesheet" href="index.css"> 
 </head>
@@ -19,7 +19,7 @@
 <div class="jumbotron text-center" style="background-color:#034200;">
 	<div style="transform: scale(1);" id='mmrpHEADGLOBAL'>
 	<h1 style="color:#FFF" id='mmrpHeadID' >
-		<img src="./img/ic_logo_teliko-web.png" alt="logo" class="logoHeader" style="width:10vw;height:15vh"/>Multimodal Route Planner
+		<img src="./img/ic_logo_teliko-web1.png" alt="logo" class="logoHeader" style="width:10vw;height:15vh"/>Multimodal Route Planner
 		<h4 text-align:right; style="color:#FFF" id='mmrpHeadID2'>Plan your trip in Western <br/> Greece and Puglia! (Under Construction)  </h4>
 	</h1>
 	</div>
@@ -31,14 +31,16 @@
     <div class="col-sm-3" style="width:450px; max-width:450px;" id="buttonsID">
 				<p><a href="#profileModal" data-toggle="modal"
 								 data-target="#profileModal" id="userLoginLink">Login</a> |
-				<a href="javascript:function() { return false; }" >Language </a> |
+								 
+				<a href="#langModal" data-toggle="modal"
+								 data-target="#langModal" id="userLangLink" >Language </a> |
 				<!--a href="" >MMRP Evaluation</a> |
 				<a href="" >Report a bug</a--> 
 				<a href="https://docs.google.com/forms/d/e/1FAIpQLScqv2X7s0el8Ui4h2uuf4cfHBacKfODRI0Z5LHDH44hZ-_t2A/viewform">
 					MMRP Evaluation</a> |
 				<a href="https://www.interreginvestment.eu/investment-mmr-bug-report/?fbclid=IwAR3CrFTOcV0EV7n3OXf_t5IXjplNgLqaViuSAmI5_VR36ewXH-7zzl9BAyw" >Report a bug</a> |
 				<a href="mailto:investment-info@ceid.upatras.gr?subject=INVESTMENT MMRP - Feedback&body=Hello, my comments about the APP are the following">Feedback</a>
-				<!/p>
+				</p>
 				<! buttons>
 				<div class="btn-group btn-group-lg">
 					<button id='trainButton' type="button" class="btn btn-primary" style="background-color:#d8d8d8;z-index:0;"><img src="./img/rail.png" alt='Public' width="30px" height="30px"></button>
@@ -101,6 +103,38 @@
 					 </div>
 				  </div>
 				</div-->
+
+				  <!-- Language Modal -->
+				  <div class="modal"  id="langModal" role="dialog">
+					 <div class="modal-dialog">
+					   <!-- Modal content-->
+						<div class="col-md-6 col-md-offset-3">
+						<!--h1 class="text-center text-bold mt-4x">Log in</h1-->
+						<div class="well row pt-2x pb-3x bk-light">
+						 	<button type="button" class="close" aria-label="Close" onclick='$("#langModal").modal("hide");'>
+							  <span aria-hidden="true">&times;</span>
+							</button>
+							<div class="col-md-8 col-md-offset-2">
+							<div class="modal-body">
+								<!form id="buttonCheckBox">
+								<form>
+									<input type='radio' class='radio-button' id="englLang" name="lang" value="english" checked>
+										<label for="englLang"> English </label><br>
+									<input type='radio' class='radio-button' id="grLang" name="lang" value="greek">
+										<label for="grLang"> Greek </label><br>
+									<input type='radio' class='radio-button' id="itLang" name="lang" value="italian">
+										<label for="itLang"> Italian </label><br>
+									<button id='trainButton' type="button" class="btn btn-primary" style="background-color:#d8d8d8;z-index:0;" onclick="changeLang();return false;">
+												Save</button>
+										
+								</form>
+						  </div>
+							
+							</div>
+						</div>
+					</div>
+				 </div>
+				</div>
 
 
 				  <!-- Profile sign in Modal -->

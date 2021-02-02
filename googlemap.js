@@ -3,7 +3,7 @@
 var localmap;
 // Global Variables for accessing data
 // default dummy values
-var lg;//   = 'en';
+var lg = 'en';
 var slat;// = 38.2466036;
 var slon;// = 21.7361790;
 
@@ -45,7 +45,32 @@ var loggedIn = false;
 
 var longpress = false;
 
+function changeLang(){
 
+   var englg =  document.getElementById("englLang");
+	var grlg  =  document.getElementById("grLang");
+	var itlg  =  document.getElementById("itLang");
+
+
+	if(englg.checked == true){
+		lg  = 'en'; 
+	}
+	if(grlg.checked == true){
+		lg  = 'gr';
+	}
+
+	if(itlg.checked == true){
+		lg  = 'it';
+	}
+	
+	$('#langModal').modal('hide');
+	
+ 	if(document.getElementById("spoint").value.length > 0 &&  document.getElementById("epoint").value.length > 0){
+		updateRoute(document.getElementById("spoint"),document.getElementById("epoint"));
+	}
+
+	return false;
+}
 
 function userSignup(){
 
@@ -72,11 +97,11 @@ function userSignup(){
 				xmlhttp.onreadystatechange = function() {
 																if (this.readyState == 4 && this.status == 200) {
 																		//var userData = JSON.parse(this.responseText);
-																		console.log(this.responseText);
+																		//console.log(this.responseText);
 																		var res = JSON.parse(this.responseText);
 
 																		if(res['error'] === "Success"){
-																				console.log(res);
+																				//console.log(res);
 																				document.getElementById("username").value = name;
 																				document.getElementById("userpass").value = password;
 																				document.getElementById("username").innerHTML = name;
@@ -93,7 +118,7 @@ function userSignup(){
 														};
 
 
-				console.log("http://web.interreginvestment.eu/mmrp/signUpForm.php?data2b="+jsonData);
+				//console.log("http://web.interreginvestment.eu/mmrp/signUpForm.php?data2b="+jsonData);
 				xmlhttp.open("POST", "http://web.interreginvestment.eu/mmrp/signUpForm.php?data2b="+jsonData, true);
 				xmlhttp.send();
 
@@ -119,7 +144,7 @@ function userLogOut(){
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-					console.log("user out");	
+					//console.log("user out");	
 					loggedIn=false;
 					return false;
 				}
@@ -151,7 +176,7 @@ function editProfileInfo(){
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-			console.log(this.responseText);
+			//console.log(this.responseText);
 			document.getElementById("LoggedInInside").innerHTML="<p style='align:center'> <img src='./img/ic_profile.png'> <p>Hello " + name +"! <br><br>"+email + "</p><p>";
 			document.getElementById("userLoginLink").innerHTML=name;
 
@@ -268,6 +293,7 @@ function updateMod(modButton){
 function setDefault(){
 
 	lg   = 'en';
+	
 
 /*
 	slat = 38.2466036;
@@ -313,7 +339,7 @@ function setDefault(){
 	document.getElementById("dateModal").value = ""+d.getFullYear() +"-"+month+"-"+day;
 
 
-	console.log('DateD: ' + d.getFullYear() +"-"+month+"-"+day);
+	//console.log('DateD: ' + d.getFullYear() +"-"+month+"-"+day);
 
 //	document.getElementById("timeA").value = "";
 //	document.getElementById("dateA").value = "";
@@ -376,8 +402,8 @@ function updateSettings(){
 	var dayD = dateD.slice(8, 10); // day
 
 	var fullDateD = new Date(yD, monthD, dayD, hD, minD, "0","0");
-	console.log("ts-: " + ts);
-	console.log("te-: " + te);
+	//console.log("ts-: " + ts);
+	//console.log("te-: " + te);
 
 	if(document.getElementById("labelDate").value=='D'){
 		ts = fullDateD.getTime() / 1000;
@@ -388,12 +414,12 @@ function updateSettings(){
 	}
 
 	var dtest = new Date(te * 1000)
-	console.log("Arrival date: "+ dtest);
+	//console.log("Arrival date: "+ dtest);
 
-	console.log("MonthD: "+ monthD);
+	//console.log("MonthD: "+ monthD);
 
-	console.log("ts+: " + ts);
-	console.log("te+: " + te);
+	//console.log("ts+: " + ts);
+	//console.log("te+: " + te);
 	/* --------------------- */
 
 
@@ -448,7 +474,7 @@ function updateSettings(){
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-			console.log(this.responseText);
+			//console.log(this.responseText);
 			return false;
 		}
 	};
@@ -504,13 +530,13 @@ function myPositionInMap(position) {
 	};
 
 
-	xmlhttp.open("POST", "https://maps.googleapis.com/maps/api/geocode/json?latlng=slat,slon&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I'", true);
+	xmlhttp.open("POST", "https://maps.googleapis.com/maps/api/geocode/json?latlng=slat,slon&key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM'", true);
 	xmlhttp.send();
 
 }
 
 function errorGeolocation(err){
-	console.log(err);
+	//console.log(err);
 }
 
 
@@ -518,7 +544,7 @@ function getLocation() {
   if (navigator.geolocation) {
 	navigator.geolocation.getCurrentPosition(myPositionInMap,errorGeolocation,{timeout:1000});
   } else {
-    console.log("Geolocation is not supported by this browser.");
+    //console.log("Geolocation is not supported by this browser.");
   }
 }
 
@@ -537,7 +563,7 @@ function sPointSetMenu(){
 	var dest = latLng;
 
 	latLng = latLng.split(",");
-	console.log("sending to google: " + latLng);
+	//console.log("sending to google: " + latLng);
 
 
 
@@ -550,6 +576,7 @@ function sPointSetMenu(){
 				contextMenuSpoint.setMap(null);
 			}
 
+			//console.log(this.responseText);
 			var messageS = jsonSpoint.results[0].formatted_address ; //'You are here';
 			var markerS = new google.maps.Marker({
 					 position: contextLatLng,
@@ -565,9 +592,9 @@ function sPointSetMenu(){
 			document.getElementById("spoint").value=messageS;
 			document.getElementById("spoint").placeholder=messageS;
 
-			console.log("Before spoint: "+latLng);
+			//console.log("Before spoint: "+latLng);
 
-			console.log("spoint: " +  document.getElementById("spoint").value);
+			//console.log("spoint: " +  document.getElementById("spoint").value);
 			latLng[0].replace(" ","");
 			latLng[1].replace(" ","");
 
@@ -587,7 +614,7 @@ function sPointSetMenu(){
 	};
 
 
-	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I', true);
+	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM', true);
 	xmlhttp.send();
 
 
@@ -635,7 +662,7 @@ function dPointSetMenu(){
 			dlat = Number(latLng[0]);
 			dlon = Number(latLng[1]);
 			if(pointSinMap == true){
-				console.log(latLng);
+				//console.log(latLng);
 				updateRoute(spoint,epoint);
 				pointDinMap = true;
 			}else{
@@ -646,7 +673,7 @@ function dPointSetMenu(){
 	};
 
 
-	xmlhttp.open("POST",'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I', true);
+	xmlhttp.open("POST",'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM', true);
 	xmlhttp.send();
 
 
@@ -1018,7 +1045,7 @@ function updateRoute(spoint,epoint){
 				};
 
 
-				xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I' + '&address=' + epoint.value, true);
+				xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM' + '&address=' + epoint.value, true);
 				xmlhttp.send();
 
 			return false;
@@ -1026,7 +1053,7 @@ function updateRoute(spoint,epoint){
 	};
 
 
-	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyDxth0qsM28RlcY8gF8IaPDfBxPRL_GM1I' + '&address=' + spoint.value, true);
+	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM' + '&address=' + spoint.value, true);
 	xmlhttp.send();
 
 	return false;
@@ -1109,8 +1136,6 @@ function drawLineMap(coordinates,colorMod,putMarkers,street,arrivalTime,leaveTim
 			imgSrcS = './img/trolleybus.png';
 			imgSrcE = '';
 	   }else{
-			outputMessage = "Total Time to Destination: " + outputtravel_time + "\nTotal Distance to Destination: " + distance;
-//			outputMessage = "From: " + street + " To:" + streetE + " by " + type;
 			imgSrc = undefined;
 		}
 
@@ -1462,7 +1487,7 @@ function focusLeg(legNum){
 
 function queryRoute(){
 
-	console.log("To Backend " + slat + " " + dlat);
+	//console.log("To Backend " + slat + " " + dlat);
 
 	var Url = 'http://mmrp.interreginvestment.eu:8000/getRoute/';
 	
@@ -1483,7 +1508,7 @@ function queryRoute(){
 						+"&"+"skip="+skip;
 
 	
-	console.log(inputHttp);
+	//console.log(inputHttp);
 	var mmrappReq = Url + '?' + inputHttp;
 
 	
@@ -1570,7 +1595,7 @@ function queryRoute_(jsonRoutes){
 	
 		if(type == "walk"){
 			total_walk_travel_time += travel_time;
-			console.log('Total walk travel time: ' + total_walk_travel_time);
+			//console.log('Total walk travel time: ' + total_walk_travel_time);
 		}		
 
 
@@ -1626,7 +1651,7 @@ function queryRoute_(jsonRoutes){
 		drawLineMap(route,type,true,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE,type,StartEnd);
 
 		if(type == "total"){
-				console.log("Arr " + arrivalTime + " Leave " + leaveTime);
+				//console.log("Arr " + arrivalTime + " Leave " + leaveTime);
 		}
 		addDirections(type,street,arrivalTime,leaveTime,waitTime,streetE,arrivalTimeE, desc, distance, travel_time, walk_time,i,-1);
 		/* add desc, distance, travel_time, walk_time */
@@ -1699,9 +1724,9 @@ function queryRoute_(jsonRoutes){
 	var clat = Math.abs(slat+dlat)/2;
 	var clon = Math.abs(slon+dlon)/2;
 
-	console.log("clat: " + clat + " clon: " + clon);
-	console.log("slat: " + slat + " slon: " + slon);
-	console.log("dlat: " + dlat + " dlon: " + dlon);
+	//console.log("clat: " + clat + " clon: " + clon);
+	//console.log("slat: " + slat + " slon: " + slon);
+	//console.log("dlat: " + dlat + " dlon: " + dlon);
 
 	localmap.setCenter(new google.maps.LatLng(clat, clon));
 	//localmap.setMapTypeId(google.maps.MapTypeId.ROADMAP);
@@ -1767,7 +1792,7 @@ function queryRoute_(jsonRoutes){
 	
 	queryLeg = jsonRoutes.routes[j].legs;
 
-	console.log(jsonRoutes);
+	//console.log(jsonRoutes);
 	return false;	
 }
 
