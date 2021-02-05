@@ -45,6 +45,92 @@ var loggedIn = false;
 
 var longpress = false;
 
+var langWords;
+
+
+function updateLang(){
+
+	document.getElementById("userLoginLink").innerHTML = langWords.Login[lg];
+	document.getElementById("userLangLink").innerHTML  = langWords.Language[lg];
+	document.getElementById("mmrEvaluation").innerHTML = langWords.mmrEvaluation[lg];
+	document.getElementById("repBug").innerHTML 			= langWords.repBug[lg];
+	document.getElementById("feedback").innerHTML 		= langWords.feedback[lg];
+	document.getElementById("buttonCheckModalinnerPar").innerHTML	= langWords.buttonCheckModalinnerPar[lg];
+	document.getElementById("lastLeg").innerHTML   	= langWords.lastLeg[lg];
+	document.getElementById("bothLegs").innerHTML	= langWords.bothLegs[lg];
+	document.getElementById("firstLeg").innerHTML	= langWords.firstLeg[lg];
+	document.getElementById("hybridChoices").value	= langWords.hybridChoices[lg];
+	document.getElementById("noLoggedInEmailorUsername").innerHTML	= langWords.noLoggedInEmailorUsername[lg];
+	document.getElementById("username").placeholder	= langWords.username[lg];
+	document.getElementById("noLoggedInEmailorPassword").innerHTML	= langWords.noLoggedInEmailorPassword[lg];
+	document.getElementById("userpass").placeholder	= langWords.userpass[lg];
+	document.getElementById("login").innerHTML	= langWords.login[lg];
+	document.getElementById("dontHaveAnAcount").innerHTML	= langWords.dontHaveAnAcount[lg];
+	document.getElementById("signUpAccount").innerHTML	= langWords.signUpAccount[lg];
+	document.getElementById("logOutButton").innerHTML	= langWords.logOutButton[lg];
+	document.getElementById("editProfileButton").innerHTML	= langWords.editProfileButton[lg];
+	document.getElementById("editProfileName").innerHTML	= langWords.editProfileName[lg];
+
+	document.getElementById("editProfileEmail").innerHTML	= langWords.editProfileEmail[lg];
+	document.getElementById("editProfileCity").innerHTML	= langWords.editProfileCity[lg];
+	document.getElementById("editProfileCountry").innerHTML	= langWords.editProfileCountry[lg];
+	document.getElementById("editProfileRegister").innerHTML	= langWords.editProfileRegister[lg];
+
+	document.getElementById("SUname").innerHTML	= langWords.SUname[lg];
+
+	document.getElementById("SUpass").innerHTML	= langWords.SUpass[lg];
+	document.getElementById("SUpassConf").innerHTML	= langWords.SUpassConf[lg];
+	document.getElementById("SUemail").innerHTML	= langWords.SUemail[lg];
+	document.getElementById("SUCountry").innerHTML	= langWords.SUCountry[lg];
+	document.getElementById("SUCity").innerHTML	= langWords.SUCity[lg];
+	document.getElementById("SURegister").innerHTML	= langWords.SURegister[lg];
+
+	document.getElementById('alreadyHaveAccount').innerHTML	= langWords.alreadyHaveAccount[lg];
+	document.getElementById('searchFormButton').innerHTML	= langWords.searchFormButton[lg];
+
+	document.getElementById('fromHere').innerHTML	= langWords.fromHere[lg];
+	document.getElementById('towardsHere').innerHTML	= langWords.towardsHere[lg];
+	
+	document.getElementById('transPrefHeader').innerHTML	= langWords.transPrefHeader[lg];
+	
+	document.getElementById('modBus').innerHTML	= langWords.modBus[lg];
+	document.getElementById('modSubway').innerHTML	= langWords.modSubway[lg];
+	document.getElementById('modTrain').innerHTML	= langWords.modTrain[lg];
+	document.getElementById('modTram').innerHTML	= langWords.modTram[lg];
+	document.getElementById('modTrolley').innerHTML	= langWords.modTrolley[lg];
+	document.getElementById('modBoat').innerHTML	= langWords.modBoat[lg];
+
+	document.getElementById('headRoutesCheckBox').innerHTML	= langWords.headRoutesCheckBox[lg];
+
+	document.getElementById('eaChecked').innerHTML	= langWords.eaChecked[lg];
+	document.getElementById('ldChecked').innerHTML	= langWords.ldChecked[lg];
+	
+
+	document.getElementById('labelDateD').innerHTML	= langWords.labelDateD[lg];
+	document.getElementById('labelDateA').innerHTML	= langWords.labelDateA[lg];
+	
+	document.getElementById('labelDateForm').innerHTML	= langWords.labelDateForm[lg];
+	document.getElementById('labeTimeForm').innerHTML	= langWords.labeTimeForm[lg];
+	
+	document.getElementById('settingsNavSubmit').innerHTML	= langWords.settingsNavSubmit[lg];
+	
+	document.getElementById('spoint').placeholder	= langWords.spointPlaceholder[lg];
+	document.getElementById('epoint').placeholder	= langWords.epointPlaceholder[lg];
+	
+
+
+}
+
+function setLangWords(){
+	$.getJSON("langWords.json", function(json) {
+//lg = 'gr';
+		 langWords = json; 
+		 updateLang();
+	});
+
+
+}
+
 function changeLang(){
 
    var englg =  document.getElementById("englLang");
@@ -63,6 +149,7 @@ function changeLang(){
 		lg  = 'it';
 	}
 	
+	updateLang();
 	$('#langModal').modal('hide');
 	
  	if(document.getElementById("spoint").value.length > 0 &&  document.getElementById("epoint").value.length > 0){
@@ -294,7 +381,7 @@ function setDefault(){
 
 	lg   = 'en';
 	
-
+	setLangWords();
 /*
 	slat = 38.2466036;
 	slon = 21.7361790;

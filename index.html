@@ -20,7 +20,7 @@
 	<div style="transform: scale(1);" id='mmrpHEADGLOBAL'>
 	<h1 style="color:#FFF" id='mmrpHeadID' >
 		<img src="./img/ic_logo_teliko-web1.png" alt="logo" class="logoHeader" style="width:10vw;height:15vh"/>Multimodal Route Planner
-		<h4 text-align:right; style="color:#FFF" id='mmrpHeadID2'>Plan your trip in Western <br/> Greece and Puglia! (Under Construction)  </h4>
+		<h4 text-align:right; style="color:#FFF" id='mmrpHeadID2'>Plan your trip in Western <br/> Greece and Puglia!</h4>
 	</h1>
 	</div>
 
@@ -36,10 +36,10 @@
 								 data-target="#langModal" id="userLangLink" >Language </a> |
 				<!--a href="" >MMRP Evaluation</a> |
 				<a href="" >Report a bug</a--> 
-				<a href="https://docs.google.com/forms/d/e/1FAIpQLScqv2X7s0el8Ui4h2uuf4cfHBacKfODRI0Z5LHDH44hZ-_t2A/viewform">
+				<a href="https://docs.google.com/forms/d/e/1FAIpQLScqv2X7s0el8Ui4h2uuf4cfHBacKfODRI0Z5LHDH44hZ-_t2A/viewform" id="mmrEvaluation">
 					MMRP Evaluation</a> |
-				<a href="https://www.interreginvestment.eu/investment-mmr-bug-report/?fbclid=IwAR3CrFTOcV0EV7n3OXf_t5IXjplNgLqaViuSAmI5_VR36ewXH-7zzl9BAyw" >Report a bug</a> |
-				<a href="mailto:investment-info@ceid.upatras.gr?subject=INVESTMENT MMRP - Feedback&body=Hello, my comments about the APP are the following">Feedback</a>
+				<a id='repBug' href="https://www.interreginvestment.eu/investment-mmr-bug-report/?fbclid=IwAR3CrFTOcV0EV7n3OXf_t5IXjplNgLqaViuSAmI5_VR36ewXH-7zzl9BAyw" >Report a bug</a> |
+				<a id='feedback' href="mailto:investment-info@ceid.upatras.gr?subject=INVESTMENT MMRP - Feedback&body=Hello, my comments about the APP are the following">Feedback</a>
 				</p>
 				<! buttons>
 				<div class="btn-group btn-group-lg">
@@ -69,18 +69,18 @@
 						<!-- Modal content-->
 						<div class="modal-content">
 						  <div class="modal-header">
-							 <h4 class="modal-title">Which route legs do you wish to be connected with car directions?</h4>
+							 <h4 class="modal-title" id='buttonCheckModalinnerPar'>Which route legs do you wish to be connected with car directions?</h4>
 						  </div>
 						  <div class="modal-body">
 								<!form id="buttonCheckBox">
 								<form>
 									<input type='radio' class='radio-button' id="tmpmod1" name="tmpmod" value="pc">
-										<label for="tmpmod1"> Last Leg </label><br>
+										<label for="tmpmod1" id='lastLeg'> Last Leg </label><br>
 									<input type='radio' class='radio-button' id="tmpmod2" name="tmpmod" value="cpc">
-										<label for="tmpmod2"> Both Legs </label><br>
+										<label for="tmpmod2" id='bothLegs'> Both Legs </label><br>
 									<input type='radio' class='radio-button' id="tmpmod3" name="tmpmod" value="cp">
-										<label for="tmpmod3"> First Leg  </label><br>
-								  <input type="button" value="Submit" id='hybridChoices' class="btn btn-default">
+										<label for="tmpmod3" id='firstLeg'> First Leg  </label><br>
+								  <input type="button" value="Submit" id="hybridChoices" class="btn btn-default">
 								</form>
 	
 						  </div>
@@ -124,7 +124,7 @@
 										<label for="grLang"> Greek </label><br>
 									<input type='radio' class='radio-button' id="itLang" name="lang" value="italian">
 										<label for="itLang"> Italian </label><br>
-									<button id='trainButton' type="button" class="btn btn-primary" style="background-color:#d8d8d8;z-index:0;" onclick="changeLang();return false;">
+									<button id='langSaveButton' type="button" class="btn btn-primary" style="background-color:#d8d8d8;z-index:0;" onclick="changeLang();return false;">
 												Save</button>
 										
 								</form>
@@ -153,9 +153,9 @@
 							  <! if not logged in>
 							  <div id="noLoggedIn" style="display:block">
 							  <form method="post">
-									<label for="" class="text-uppercase text-sm">Email or Username</label>
+									<label for="" class="text-uppercase text-sm" id="noLoggedInEmailorUsername">Email or Username</label>
 									<input id="username" type="text" placeholder="Username" name="email" class="form-control mb" required>
-									<label for="" class="text-uppercase text-sm">Password</label>
+									<label for="" class="text-uppercase text-sm" id="noLoggedInEmailorPassword">Password</label>
 									<input id="userpass" type="password" placeholder="Password" name="password" class="form-control mb" required>
 
 									<!button class="btn btn-primary btn-block" name="login" type="submit" action="./logInForm.php" method="post">
@@ -163,8 +163,8 @@
 								</form>
 
 								<br>
-								<p>Don't Have an Account?<br> <a type="button" class="btn btn-default" data-toggle="modal"
-								 data-target="#createProfileModal" data-dismiss="modal">Sign up</a>
+								<p><p id="dontHaveAnAcount">Don't Have an Account? </p><br> <a type="button" class="btn btn-default" data-toggle="modal"
+								 data-target="#createProfileModal" data-dismiss="modal" id="signUpAccount">Sign up</a>
 								</p>
 								</div>
 								<! if logged in>
@@ -172,8 +172,8 @@
 									<div id="LoggedInInside">
 
 									</div>			
-									<button class="btn btn-default" onclick="userLogOut()"> Log out </button>
-									<button class="btn btn-default" data-toggle="modal" data-target="#editProfileModal" data-dismiss="modal">
+									<button class="btn btn-default" onclick="userLogOut()" id='logOutButton'> Log out </button>
+									<button class="btn btn-default" data-toggle="modal" data-target="#editProfileModal" data-dismiss="modal" id='editProfileButton'>
 											 Edit Profile
 									</button>
 								</div>
@@ -194,19 +194,19 @@
 							 
 								<div class="well row pt-2x pb-3x bk-light text-center">
 									<form>
-									  <label for="editname">Name:</label><br>
+									  <label for="editname" id='editProfileName'>Name:</label><br>
 									  <input type="text" id="editname" name="editname"><br>
 
-									  <label for="editemail">Email:</label><br>
+									  <label for="editemail" id='editProfileEmail'>Email:</label><br>
 									  <input type="text" id="editemail" name="editemail"><br><br>
 
-									  <label for="editCity">City:</label><br>
+									  <label for="editCity" id='editProfileCity'>City:</label><br>
 									  <input type="text" id="editCity" name="editCity"><br><br>
 
-									  <label for="editCountry">Country:</label><br>
+									  <label for="editCountry" id='editProfileCountry'>Country:</label><br>
 									  <input type="text" id="editCountry" name="editCountry"><br><br>
 
-									  <button value="Register" onclick="editProfileInfo();return false;">Register</button>
+									  <button value="Register" id='editProfileRegister' onclick="editProfileInfo();return false;">Register</button>
 									</form> 
 								</div>
 					</div>
@@ -224,31 +224,31 @@
 							  <span>&times;</span>
 					   </button>
 								<form>
-								  <label for="SUname">Name:</label><br>
+								  <label for="SUname" id='SUname'>Name:</label><br>
 								  <input type="text" id="SUname" name="SUname"><br>
 
-								  <label for="SUpass">Password:</label><br>
+								  <label for="SUpass" id='SUpass'>Password:</label><br>
 								  <input type="password" id="SUpass" name="SUpass"><br><br>
 
-								  <label for="SUpassConf">Confirm Password:</label><br>
+								  <label for="SUpassConf" id='SUpassConf' >Confirm Password:</label><br>
 								  <input type="password" id="SUpassConf" name="SUpassConf"><br><br>
 
-								  <label for="SUemail">Email:</label><br>
+								  <label for="SUemail" id='SUemail'>Email:</label><br>
 								  <input type="text" id="SUemail" name="SUemail"><br><br>
 
-								  <label for="SUCountry">Country:</label><br>
+								  <label for="SUCountry" id='SUCountry'>Country:</label><br>
 								  <input type="text" id="SUCountry" name="SUCountry"><br><br>
 
-								  <label for="SUCity">City:</label><br>
+								  <label for="SUCity" id='SUCity' >City:</label><br>
 								  <input type="text" id="SUCity" name="SUCity"><br><br>
 
-								  <button value="Register" onclick="userSignup();return false;">Register</button>
+								  <button value="Register" id='SURegister' onclick="userSignup();return false;">Register</button>
 								</form> 
 
 
                                 <br>
                                 <br>
-								<p>Already Have Account? <br>
+								<p><p id='alreadyHaveAccount'>Already Have Account?</p> <br>
 								<button class="btn btn-default" id="signInButton" data-toggle="modal" data-target="#profileModal" data-dismiss="modal"> Sign in </button>
 								</p>
 						</div>
@@ -347,11 +347,11 @@
 
 
 	<div class="menu" id="contextGoogleMapsMenu" style='width:120px;height:40px;'>
-            <div class="menu-item" onclick="sPointSetMenu()">From here</div>
-            <div class="menu-item" onclick="dPointSetMenu()">Towards here</div>
+            <div class="menu-item" onclick="sPointSetMenu()" id='fromHere'>From here</div>
+            <div class="menu-item" onclick="dPointSetMenu()" id='towardsHere'>Towards here</div>
    </div>
 
-
+<! UP TO HERE ME TI METAFRASI >
 <! Extra query settings sideNav>
 				<div id="settingsSideNav" class="overlay" style="z-index=100;">
 				  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" id="closebtnNav">&times;</a>
@@ -360,17 +360,17 @@
 						<h2 id="transPrefHeader">Preferred Modes</h2>
 						<form>
 						  <input checked type="checkbox" id="vehicleBus" name="vehicleBus" value="bus">
-						  <label for="bus">Bus</label><br>
+						  <label for="bus" id="modBus">Bus</label><br>
 						  <input checked type="checkbox" id="vehicleSubway" name="vehicleSubway" value="subway">
-						  <label for="subway">Subway</label><br>
+						  <label for="subway" id="modSubway">Subway</label><br>
 						  <input checked type="checkbox" id="vehicleTrain" name="vehicleTrain" value="train">
-						  <label for="train">Train</label><br>
+						  <label for="train" id="modTrain">Train</label><br>
 						  <input checked type="checkbox" id="vehicleTram" name="vehicleTram" value="tram">
-						  <label for="tram">Tram</label><br>
+						  <label for="tram" id="modTram">Tram</label><br>
 						  <input checked type="checkbox" id="vehicleTrolley" name="vehicleTrolley" value="trolley">
-						  <label for="trolley">Trolley</label><br>
+						  <label for="trolley" id="modTrolley">Trolley</label><br>
 						  <input checked type="checkbox" id="vehicleBoat" name="vehicleBoat" value="Boat">
-						  <label for="Boat">Boat</label><br>
+						  <label for="Boat" id="modBoat">Boat</label><br>
 						</form>
 						</div>
 
@@ -396,9 +396,9 @@
 						<!form id="buttonCheckBox">
 						<form>
 						  <input checked type='radio' class='radio-button' name="routesCheckBox" value="eaCheckBox" id="eaCheckBox">
-						  <label for="eaChecked">Earliest Arrival</label><br>
+						  <label for="eaChecked" id="eaChecked">Earliest Arrival</label><br>
 						  <input type='radio' class='radio-button' name="routesCheckBox" value="ldCheckBox" id="ldCheckBox">
-						  <label for="ldChecked">Fewer transfers</label><br>
+						  <label for="ldChecked" id="ldChecked">Fewer transfers</label><br>
 						</form>
 						</div>
 

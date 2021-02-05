@@ -1,0 +1,81 @@
+{
+  "buttonCheckModalinnerPar":{"en": "Which route legs do you wish to be connected with car directions?",
+  									   "gr": "Σε ποιο κομμάτι της διαδρομής θέλετε να χρησιμοποιήσετε αμάξι;", "it": "Which route legs do you wish to be connected with car directions?"},
+  "lastLeg":  {"en": "lastLeg" , "gr": "Τελευταίο σκέλος", "it": "lastLeg"},
+  "bothLegs": {"en": "bothLegs", "gr": "Και τα δύο", "it": "bothLeg"},
+  "firstLeg": {"en": "firstLeg", "gr": "Πρώτο σκέλος", "it": "firstLeg"},
+  "hybridChoices": {"en": "Submit", "gr": "Αποθήκευση", "it": "Submit"},
+  "noLoggedInEmailorUsername": {"en": "Email or Username", "gr": "Email ή Όνομα χρήστη", "it": "Email or Username"},
+  "username": {"en": "Username", "gr": "Όνομα Χρήστη", "it": "Username"},
+  "noLoggedInEmailorPassword": {"en": "Password", "gr": "Συνθηματικό", "it": "Password"},
+  "userpass": {"en": "Password", "gr": "Συνθηματικό", "it": "Password"},
+  "login": {"en": "Login", "gr": "Είσοδος", "it": "Login"},
+  "dontHaveAnAcount": {"en": "Don't have an Acount?", "gr": "Δημιουργείστε λογαριασμό", "it": "Don't have an Acount?"},
+  "signUpAccount": {"en": "Sign up", "gr": "Εγγραφείτε", "it": "Sign up"},
+  "logOutButton": {"en": "Log out", "gr": "Αποσύνδεση", "it": "Log out"},
+  "editProfileButton": {"en": "Edit Profile", "gr": "Επεξεργασία Προφίλ", "it": "Edit Profile"},
+
+
+  "transPrefHeader": {"en": "Preferred Modes", "gr": "Προτιμήσεις Μεταφορικών", "it": "Preferred Modes"},
+
+  "modBus": {"en": "Bus", "gr": "Λεωφορείο", "it": "Bus"},
+  "modSubway": {"en": "Subway", "gr": "Μετρό", "it": "Subway"},
+  "modTrain": {"en": "Train", "gr": "Τραίνο", "it": "Train"},
+  "modTram": {"en": "Tram", "gr": "Τραμ", "it": "Tram"},
+  "modTrolley": {"en": "Trolley", "gr": "Τρόλεϊ", "it": "Trolley"},
+  "modBoat": {"en": "Boat", "gr": "Καράβι", "it": "Boat"},
+
+  "headRoutesCheckBox": {"en": "Routes", "gr": "Διαδρομές", "it": "Routes"},
+	 
+  "eaChecked": {"en": "Earliest Arrival", "gr": "Νωρίτερα Άφιξη", "it": "Earliest Arrival"},
+  "ldChecked": {"en": "Fewer Transfers",  "gr": "Λιγότερες Μετεπιβιβάσεις", "it": "Fewer Transfers"},
+	
+  "labelDateD": {"en": "Departure",  "gr": "Αναχώρηση", "it": "Departure"},
+  "labelDateA": {"en": "Arrival",  "gr": "Άφιξη", "it": "Arrival"},
+
+
+  "searchFormButton": {"en": "Search", "gr": "Αναζήτηση", "it": "Search"},
+
+  "fromHere": {"en": "From Here", "gr": "Αφετηρία", "it": "From here"},
+  "towardsHere": {"en": "Towards Here", "gr": "Προορισμός", "it": "Towards Here"},
+
+  "labelDateForm": {"en": "Date", "gr": "Ημερομηνία", "it": "Date"},
+  "labeTimeForm": {"en": "Time", "gr": "Ώρα", "it": "Time"},
+
+
+  "settingsNavSubmit": {"en": "Submit","gr": "Αποθήκευση", "it": "Submit"},
+
+
+  "spointPlaceholder": {"en": "Starting Point","gr": "Αφετηρία", "it": "Starting Point"},
+  "epointPlaceholder": {"en": "Destination","gr": "Προορισμός", "it": "Προορισμός"},
+
+
+
+
+  "editProfileName": {"en": "Name", "gr": "Όνομα", "it": "Name"},
+
+  "editProfileEmail": {"en": "Email", "gr": "Ηλ.Διεύθυνση", "it": "Email"},
+  "editProfileCity": {"en": "City", "gr": "Πόλη", "it": "City"},
+  "editProfileCountry": {"en": "Country", "gr": "Χώρα", "it": "Country"},
+  "editProfileRegister": {"en": "Register", "gr": "Αποθήκευση", "it": "Register"},
+
+  "SUname": {"en": "Name", "gr": "Όνομα", "it": "Name"},
+  "SUpass": {"en": "Password", "gr": "Συνθηματικό", "it": "Password"},
+  "SUpassConf": {"en": "Confirm Password", "gr": "Επιβεβαίωση Κωδικού", "it": "Confirm PAssword"},
+  "SUemail": {"en": "Email", "gr": "Ηλ.Διεύθυνση", "it": "Email"},
+  "SUCity": {"en": "City", "gr": "Πόλη", "it": "City"},
+  "SUCountry": {"en": "Country", "gr": "Χώρα", "it": "Country"},
+  "SURegister": {"en": "Register", "gr": "Καταχώρηση", "it": "Register"},
+  
+  "alreadyHaveAccount": {"en": "Already have an account?", "gr": "Έχετε ήδη λογαριασμό;", "it": "Already have an account?"},
+  
+
+  "feedback": {"en": "Feedback", "gr": "Αναφέρετε σχόλια", "it": "Feedback"},
+  "repBug": {"en": "Report a bug", "gr": "Αναφέρετε ένα σφάλμα", "it": "Report a bug"},
+  "Login": {"en": "Login", "gr": "Σύνδεση", "it": "Login"},
+  "mmrEvaluation": {"en": "MMRP Evaluation", "gr": "MMRP Αξιολόγηση", "it": "MMRP Evaluation"},
+  "Language": {"en": "Language", "gr": "Γλώσσα", "it": "Language"}
+  
+  
+  
+}
