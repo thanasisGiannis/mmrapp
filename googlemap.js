@@ -617,7 +617,7 @@ function myPositionInMap(position) {
 	};
 
 
-	xmlhttp.open("POST", "https://maps.googleapis.com/maps/api/geocode/json?latlng=slat,slon&key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM'", true);
+	xmlhttp.open("POST", "https://maps.googleapis.com/maps/api/geocode/json?latlng=slat,slon&key='", true);
 	xmlhttp.send();
 
 }
