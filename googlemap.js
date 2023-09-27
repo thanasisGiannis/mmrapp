@@ -701,7 +701,7 @@ function sPointSetMenu(){
 	};
 
 
-	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM', true);
+	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=', true);
 	xmlhttp.send();
 
 
@@ -760,7 +760,7 @@ function dPointSetMenu(){
 	};
 
 
-	xmlhttp.open("POST",'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM', true);
+	xmlhttp.open("POST",'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ latLng +'&key=', true);
 	xmlhttp.send();
 
 
@@ -1132,7 +1132,7 @@ function updateRoute(spoint,epoint){
 				};
 
 
-				xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM' + '&address=' + epoint.value, true);
+				xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=' + '&address=' + epoint.value, true);
 				xmlhttp.send();
 
 			return false;
@@ -1140,7 +1140,7 @@ function updateRoute(spoint,epoint){
 	};
 
 
-	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBw-BW9w0Cxt0WC2AC2EaF3lNiv3ArachM' + '&address=' + spoint.value, true);
+	xmlhttp.open("POST", 'https://maps.googleapis.com/maps/api/geocode/json?key=' + '&address=' + spoint.value, true);
 	xmlhttp.send();
 
 	return false;
